@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Discussions index{% endblock %}
+
+{% block body %}
+    <h1>Discussions index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Utilisateur1_id</th>
+                <th>Utilisateur2_id</th>
+                <th>Created_at</th>
+                <th>Updated_At</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for discussion in discussions %}
+            <tr>
+                <td>{{ discussion.id }}</td>
+                <td>{{ discussion.utilisateur1Id }}</td>
+                <td>{{ discussion.utilisateur2Id }}</td>
+                <td>{{ discussion.createdAt ? discussion.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ discussion.updatedAt ? discussion.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_discussions_show', {'id': discussion.id}) }}">show</a>
+                    <a href="{{ path('app_discussions_edit', {'id': discussion.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_discussions_new') }}">Create new</a>
+{% endblock %}
