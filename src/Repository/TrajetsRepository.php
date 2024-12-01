@@ -11,7 +11,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
-<<<<<<<< HEAD:src/Repository/LogementRepository.php
+
  * @extends ServiceEntityRepository<Logement>
  */
 class LogementRepository extends ServiceEntityRepository
@@ -30,7 +30,7 @@ class LogementRepository extends ServiceEntityRepository
 //            ->andWhere('l.exampleField = :val')
 //            ->setParameter('val', $value)
 //            ->orderBy('l.id', 'ASC')
-========
+
  * @extends ServiceEntityRepository<Trajets>
  */
 class TrajetsRepository extends ServiceEntityRepository
