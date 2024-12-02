@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}AnnoncesColocation{% endblock %}
+
+{% block body %}
+    <h1>AnnoncesColocation</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ annonces_colocation.id }}</td>
+            </tr>
+            <tr>
+                <th>Maison_id</th>
+                <td>{{ annonces_colocation.maisonId }}</td>
+            </tr>
+            <tr>
+                <th>Titre</th>
+                <td>{{ annonces_colocation.titre }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ annonces_colocation.description }}</td>
+            </tr>
+            <tr>
+                <th>Nombre_chambres</th>
+                <td>{{ annonces_colocation.nombreChambres }}</td>
+            </tr>
+            <tr>
+                <th>Prix</th>
+                <td>{{ annonces_colocation.prix }}</td>
+            </tr>
+            <tr>
+                <th>Date_pub</th>
+                <td>{{ annonces_colocation.datePub ? annonces_colocation.datePub|date('Y-m-d') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_annonces_index') }}">back to list</a>
+
+    <a href="{{ path('app_annonces_edit', {'id': annonces_colocation.id}) }}">edit</a>
+
+    {{ include('annonces/_delete_form.html.twig') }}
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}AnnoncesColocation index{% endblock %}
+
+{% block body %}
+    <h1>AnnoncesColocation index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Maison_id</th>
+                <th>Titre</th>
+                <th>Description</th>
+                <th>Nombre_chambres</th>
+                <th>Prix</th>
+                <th>Date_pub</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for annonces_colocation in annonces_colocations %}
+            <tr>
+                <td>{{ annonces_colocation.id }}</td>
+                <td>{{ annonces_colocation.maisonId }}</td>
+                <td>{{ annonces_colocation.titre }}</td>
+                <td>{{ annonces_colocation.description }}</td>
+                <td>{{ annonces_colocation.nombreChambres }}</td>
+                <td>{{ annonces_colocation.prix }}</td>
+                <td>{{ annonces_colocation.datePub ? annonces_colocation.datePub|date('Y-m-d') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_annonces_show', {'id': annonces_colocation.id}) }}">show</a>
+                    <a href="{{ path('app_annonces_edit', {'id': annonces_colocation.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="8">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_annonces_new') }}">Create new</a>
+{% endblock %}

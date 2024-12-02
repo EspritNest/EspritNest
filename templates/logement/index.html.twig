@@ -1,0 +1,45 @@
+{% extends 'back-base.html.twig' %}
+
+{% block title %}Logement index{% endblock %}
+
+{% block body %}
+    <h1>Logement index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Adresse</th>
+                <th>Code_postal</th>
+                <th>Superficie</th>
+                <th>Description</th>
+                <th>Date_ajout</th>
+                <th>ProprietaireId</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for logement in logements %}
+            <tr>
+                <td>{{ logement.id }}</td>
+                <td>{{ logement.Adresse }}</td>
+                <td>{{ logement.CodePostal }}</td>
+                <td>{{ logement.superficie }}</td>
+                <td>{{ logement.Description }}</td>
+                <td>{{ logement.dateAjout ? logement.dateAjout|date('Y-m-d') : '' }}</td>
+                <td>{{ logement.ProprietaireId }}</td>
+                <td>
+                    <a href="{{ path('app_logement_show', {'id': logement.id}) }}">show</a>
+                    <a href="{{ path('app_logement_edit', {'id': logement.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="8">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_logement_new') }}">Create new</a>
+{% endblock %}
