@@ -32,6 +32,9 @@ class AnnoncesColocation
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $date_pub = null;
 
+    #[ORM\ManyToOne(inversedBy: 'Annonces')]
+    private ?Logement $Logement = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -105,6 +108,18 @@ class AnnoncesColocation
     public function setDatePub(\DateTimeInterface $date_pub): static
     {
         $this->date_pub = $date_pub;
+
+        return $this;
+    }
+
+    public function getLogement(): ?Logement
+    {
+        return $this->Logement;
+    }
+
+    public function setLogement(?Logement $Logement): static
+    {
+        $this->Logement = $Logement;
 
         return $this;
     }
