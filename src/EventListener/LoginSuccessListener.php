@@ -29,7 +29,7 @@ final class LoginSuccessListener
         if (in_array('ROLE_ADMIN', $roles, true)) {
             $response = new RedirectResponse($this->router->generate('app_admin'));
         } elseif (in_array('ROLE_USER', $roles, true)) {
-            $response = new RedirectResponse($this->router->generate('app_admin'));
+            $response = new RedirectResponse($this->router->generate('app_front'));
         }
 
         $event->getRequest()->getSession()->set('_security.main.target_path', $response->getTargetUrl());
