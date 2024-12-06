@@ -15,7 +15,12 @@
 	#head { min-height:420px; padding-top:160px; }
 	#head .lead { font-size: 34px; }
 }
-
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
 
 /* Autohide navbar */
 .slideUp { top:-100px; }

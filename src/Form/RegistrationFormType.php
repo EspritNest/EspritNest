@@ -5,9 +5,10 @@ namespace App\Form;
 use App\Entity\Utilisateur;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\IsTrue;
@@ -19,17 +20,37 @@ class RegistrationFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('nom')
-            ->add('email')
-            ->add('Tel',TelType::class, [
-                'label' => 'Téléphone'
+            ->add('nom', TextType::class, [
+                'label' => 'Full Name',
+                'attr' => [
+                    'placeholder' => 'Enter your full name',
+                ],
             ])
-            ->add('img')
+            ->add('email', TextType::class, [
+                'label' => 'Email Address',
+                'attr' => [
+                    'placeholder' => 'Enter your email',
+                ],
+            ])
+            ->add('Tel', TelType::class, [
+                'label' => 'Phone Number',
+                'attr' => [
+                    'placeholder' => 'Enter your phone number',
+                ],
+            ])
+            ->add('img', UrlType::class, [
+                'label' => 'Profile Image URL',
+                'required' => false,
+                'attr' => [
+                    'placeholder' => 'Enter a URL for your profile image',
+                ],
+            ])
             ->add('plainPassword', PasswordType::class, [
-                                // instead of being set onto the object directly,
-                // this is read and encoded in the controller
+                'label' => 'Password',
                 'mapped' => false,
-                'attr' => ['autocomplete' => 'new-password'],
+                'attr' => [
+                    'placeholder' => 'Enter a secure password',
+                ],
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Please enter a password',
@@ -37,21 +58,19 @@ class RegistrationFormType extends AbstractType
                     new Length([
                         'min' => 6,
                         'minMessage' => 'Your password should be at least {{ limit }} characters',
-                        // max length allowed by Symfony for security reasons
                         'max' => 4096,
                     ]),
-                
                 ],
             ])
             ->add('agreeTerms', CheckboxType::class, [
+                'label' => 'Agree to terms and conditions',
                 'mapped' => false,
                 'constraints' => [
                     new IsTrue([
-                        'message' => 'You should agree to our terms.',
+                        'message' => 'You must agree to the terms and conditions.',
                     ]),
                 ],
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
