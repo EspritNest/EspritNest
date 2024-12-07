@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\AnnoncesColocationRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: AnnoncesColocationRepository::class)]
 class AnnoncesColocation
@@ -12,45 +13,58 @@ class AnnoncesColocation
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+
     private ?int $id = null;
 
-    #[ORM\Column]
-    private ?int $maison_id = null;
+
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank (message:"titre is required")]
+    #[Assert\Regex(
+        pattern: '/^\D+$/',
+        message: "Ce champ ne doit pas contenir de chiffres."
+    )]
     private ?string $titre = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Assert\NotBlank (message:"Description is required")]
+
     private ?string $description = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank (message:"Nb chambres is required")]
+    #[Assert\Regex(
+        pattern: '/^\d+$/',
+        message: "Ce champ doit contenir uniquement des chiffres."
+    )]
     private ?int $nombre_chambres = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank (message:"prix is required")]
+    #[Assert\Regex(
+        pattern: '/^\d+$/',
+        message: "Ce champ doit contenir uniquement des chiffres."
+    )]
     private ?float $prix = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Assert\NotBlank (message:"date is required")]
     private ?\DateTimeInterface $date_pub = null;
 
     #[ORM\ManyToOne(inversedBy: 'Annonces')]
+    #[Assert\NotBlank (message:"logement is required")]
     private ?Logement $Logement = null;
+
+    #[ORM\ManyToOne(inversedBy: 'annoncesColocations')]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotBlank (message:"User Id is required")]
+    private ?Utilisateur $UserId = null;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getMaisonId(): ?int
-    {
-        return $this->maison_id;
-    }
-
-    public function setMaisonId(int $maison_id): static
-    {
-        $this->maison_id = $maison_id;
-
-        return $this;
-    }
 
     public function getTitre(): ?string
     {
@@ -120,6 +134,18 @@ class AnnoncesColocation
     public function setLogement(?Logement $Logement): static
     {
         $this->Logement = $Logement;
+
+        return $this;
+    }
+
+    public function getUserId(): ?Utilisateur
+    {
+        return $this->UserId;
+    }
+
+    public function setUserId(?Utilisateur $UserId): static
+    {
+        $this->UserId = $UserId;
 
         return $this;
     }

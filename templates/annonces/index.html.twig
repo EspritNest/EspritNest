@@ -1,20 +1,22 @@
-{% extends 'base.html.twig' %}
+{% extends 'front/index.html.twig' %}
 
 {% block title %}AnnoncesColocation index{% endblock %}
 
 {% block body %}
-    <h1>AnnoncesColocation index</h1>
+<div class="container mt-5">
+    <h1 class="text-center mb-4">AnnoncesColocation index</h1>
 
-    <table class="table">
-        <thead>
+    <table class="table table-striped table-hover shadow-sm">
+        <thead class="table-primary">
             <tr>
                 <th>Id</th>
-                <th>Maison_id</th>
+                <th>Logement</th>
                 <th>Titre</th>
                 <th>Description</th>
                 <th>Nombre_chambres</th>
                 <th>Prix</th>
                 <th>Date_pub</th>
+                <th>UserId</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -22,15 +24,18 @@
         {% for annonces_colocation in annonces_colocations %}
             <tr>
                 <td>{{ annonces_colocation.id }}</td>
-                <td>{{ annonces_colocation.maisonId }}</td>
+                <td>{{ annonces_colocation.logement }}</td>
                 <td>{{ annonces_colocation.titre }}</td>
                 <td>{{ annonces_colocation.description }}</td>
                 <td>{{ annonces_colocation.nombreChambres }}</td>
                 <td>{{ annonces_colocation.prix }}</td>
                 <td>{{ annonces_colocation.datePub ? annonces_colocation.datePub|date('Y-m-d') : '' }}</td>
+                <td>{{ annonces_colocation.userId }}</td>
                 <td>
-                    <a href="{{ path('app_annonces_show', {'id': annonces_colocation.id}) }}">show</a>
-                    <a href="{{ path('app_annonces_edit', {'id': annonces_colocation.id}) }}">edit</a>
+                    <a href="{{ path('app_annonces_show', {'id': annonces_colocation.id}) }}" class="btn btn-sm text-primary" title="Voir">
+                    <i class="bi bi-eye"></i>show</a>
+                    <a href="{{ path('app_annonces_edit', {'id': annonces_colocation.id}) }}" class="btn btn-sm text-warning" title="Modifier">
+                    <i class="bi bi-pencil"></i>edit</a>
                 </td>
             </tr>
         {% else %}
@@ -40,6 +45,21 @@
         {% endfor %}
         </tbody>
     </table>
+<div class="d-flex justify-content-end mb-5">
+    <a href="{{ path('app_annonces_new') }}" class="btn btn-success">
+    <i class="bi bi-plus-circle"></i>Create new</a>
 
-    <a href="{{ path('app_annonces_new') }}">Create new</a>
+
+<style>
+    .btn i {
+        font-size: 1.2rem;
+        
+    }
+    .btn-sm {
+        padding: 0.2rem 0.5rem;
+        
+    }
+    
+    
+</style>
 {% endblock %}

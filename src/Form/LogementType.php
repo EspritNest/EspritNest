@@ -3,6 +3,8 @@
 namespace App\Form;
 
 use App\Entity\Logement;
+use App\Entity\Utilisateur;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -19,7 +21,10 @@ class LogementType extends AbstractType
             ->add('date_ajout', null, [
                 'widget' => 'single_text',
             ])
-            ->add('ProprietaireId')
+            ->add('ProprietaireId', EntityType::class, [
+                'class' => Utilisateur::class,
+                'choice_label' => 'id',
+            ])
         ;
     }
 

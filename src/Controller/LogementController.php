@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Logement;
+use App\Entity\Utilisateur; 
 use App\Form\LogementType;
 use App\Repository\LogementRepository;
 use Doctrine\ORM\EntityManagerInterface;

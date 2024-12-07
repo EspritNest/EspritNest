@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: LogementRepository::class)]
 class Logement
@@ -17,28 +18,44 @@ class Logement
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
+    #[Assert\NotBlank (message:"adresse is required")]
     private ?string $Adresse = null;
 
     #[ORM\Column(length: 10, nullable: true)]
+    #[Assert\Regex(
+        pattern: '/^\d+$/',
+        message: "Ce champ doit contenir uniquement des chiffres."
+    )]
     private ?string $Code_postal = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank (message:"superficie is required")]
+    #[Assert\Regex(
+        pattern: '/^\d+$/',
+        message: "Ce champ doit contenir uniquement des chiffres."
+    )]
     private ?float $superficie = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank (message:"description is required")]
     private ?string $Description = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Assert\NotBlank (message:"date is required")]
     private ?\DateTimeInterface $date_ajout = null;
 
-    #[ORM\Column]
-    private ?int $ProprietaireId = null;
+  
 
     /**
      * @var Collection<int, AnnoncesColocation>
      */
     #[ORM\OneToMany(targetEntity: AnnoncesColocation::class, mappedBy: 'Logement')]
     private Collection $Annonces;
+
+    #[ORM\OneToOne(inversedBy: 'logement', cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotBlank (message:"proprietaire id is required")]
+    private ?Utilisateur $ProprietaireId = null;
 
     public function __construct()
     {
@@ -110,17 +127,7 @@ class Logement
         return $this;
     }
 
-    public function getProprietaireId(): ?int
-    {
-        return $this->ProprietaireId;
-    }
-
-    public function setProprietaireId(int $ProprietaireId): static
-    {
-        $this->ProprietaireId = $ProprietaireId;
-
-        return $this;
-    }
+ 
 
     /**
      * @return Collection<int, AnnoncesColocation>
@@ -150,5 +157,22 @@ class Logement
         }
 
         return $this;
+    }
+
+    public function getProprietaireId(): ?Utilisateur
+    {
+        return $this->ProprietaireId;
+    }
+
+    public function setProprietaireId(Utilisateur $ProprietaireId): static
+    {
+        $this->ProprietaireId = $ProprietaireId;
+
+        return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->Code_postal; 
     }
 }

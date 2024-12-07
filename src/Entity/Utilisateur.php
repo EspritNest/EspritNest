@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UtilisateurRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -48,10 +50,20 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private bool $isVerified = true;
 
+    /**
+     * @var Collection<int, AnnoncesColocation>
+     */
+    #[ORM\OneToMany(targetEntity: AnnoncesColocation::class, mappedBy: 'UserId')]
+    private Collection $annoncesColocations;
+
+    #[ORM\OneToOne(mappedBy: 'ProprietaireId', cascade: ['persist', 'remove'])]
+    private ?Logement $logement = null;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
         $this->isVerified = true; // Set isVerified to true by default
+        $this->annoncesColocations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -186,6 +198,57 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         $this->isVerified = $isVerified;
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, AnnoncesColocation>
+     */
+    public function getAnnoncesColocations(): Collection
+    {
+        return $this->annoncesColocations;
+    }
+
+    public function addAnnoncesColocation(AnnoncesColocation $annoncesColocation): static
+    {
+        if (!$this->annoncesColocations->contains($annoncesColocation)) {
+            $this->annoncesColocations->add($annoncesColocation);
+            $annoncesColocation->setUserId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAnnoncesColocation(AnnoncesColocation $annoncesColocation): static
+    {
+        if ($this->annoncesColocations->removeElement($annoncesColocation)) {
+            // set the owning side to null (unless already changed)
+            if ($annoncesColocation->getUserId() === $this) {
+                $annoncesColocation->setUserId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getLogement(): ?Logement
+    {
+        return $this->logement;
+    }
+
+    public function setLogement(Logement $logement): static
+    {
+        // set the owning side of the relation if necessary
+        if ($logement->getProprietaireId() !== $this) {
+            $logement->setProprietaireId($this);
+        }
+
+        $this->logement = $logement;
+
+        return $this;
+    }
+    public function __toString(): string
+    {
+        return $this->nom; 
     }
 }
 
