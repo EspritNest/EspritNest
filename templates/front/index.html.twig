@@ -14,7 +14,16 @@
 	<link rel="stylesheet" href="{{asset ('css-front/bootstrap.min.css')}}">
 	<link rel="stylesheet" href="{{asset ('css-front/font-awesome.min.css')}}">
 
-	<!-- Custom styles for our template -->
+    <!-- Custom styles for our template -->
+
+ {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css-front/register.css') }}">
+    <style>
+        body {
+            padding-top: 15rem; /* Adjust this value to create the gap you want between the navbar and body */
+        }
+    </style>
+  
 	<link rel="stylesheet" href="{{asset ('css-front/bootstrap-theme.css')}}" media="screen" >
 	<link rel="stylesheet" href="{{asset ('css-front/main.css')}}">
 
@@ -34,20 +43,44 @@
 			<div class="navbar-header">
 				<!-- Button for smallest screens -->
 				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
-				<a class="navbar-brand" href="index.html"><img src="{{asset ('images-front/espritnest.png')}}" alt="EspritNest"></a>
+				<a class="navbar-brand" href="index.html"><img src="{{asset ('images-front/logo.png')}}" alt="Progressus HTML5 template"></a>
 			</div>
 			<div class="navbar-collapse collapse">
-			{% block nav %}
 				<ul class="nav navbar-nav pull-right">
-					<li class="active"><a href="#">Home</a></li>
-					<li><a href="/trajets">Covoiturage</a></li>
-					<li><a href="/annonces">Collocation</a></li>
-					<li><a href="{{asset ('contact.html')}}">Contact</a></li>
-					<li><a class="btn" href="login">SIGN IN / SIGN UP</a></li>
+					<li class="active"><a href="/">Home</a></li>
+					<li><a href="#">Trajet</a></li>
+					<li><a href="#">Co-location</a></li>
+					<li><a href="#">About</a></li>
+					{% if app.user %}
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+								<img src="{{ app.user.img }}" alt="User Avatar" class="user-avatar"> <b class="caret"></b>
+							</a>
+							<ul class="dropdown-menu">
+								<li><a href="#">Profile</a></li>
+								<li><a href="#">Mes Trajects</a></li>
+								<li><a href="#">Mes Voitures</a></li>
+								<li><a href="#">Mes Annonces</a></li>
+								<li><a href="discussions">Mes Discussions</a></li>
+								<li><a href="logout">Logout</a></li>
+							</ul>
+						</li>
+					{% else %}
+						<li><a class="btn" href="login">SIGN IN / SIGN UP</a></li>
+					{% endif %}
 				</ul>
-					{# <header id="head">
-		{# <div class="container"> #}
-			{# <div class="row">
+			</div><!--/.nav-collapse -->
+		</div>
+	</div>
+{% endblock %}
+{% block body %}
+        <body class="home">
+	<!-- /.navbar -->
+
+	<!-- Header -->
+	<header id="head">
+		<div class="container">
+			<div class="row">
 				<h1 class="lead">AWESOME, CUSTOMIZABLE, FREE</h1>
 				<p class="tagline">PROGRESSUS: free business bootstrap template by <a href="http://www.gettemplate.com/?utm_source=progressus&amp;utm_medium=template&amp;utm_campaign=progressus">GetTemplate</a></p>
 				<p><a class="btn btn-default btn-lg" role="button">MORE INFO</a> <a class="btn btn-action btn-lg" role="button">DOWNLOAD NOW</a></p>
@@ -251,6 +284,14 @@
 
 	<!-- JavaScript libs are placed at the end of the document so the pages load faster -->
 	{% block javascripts %}
+	
+	<script type="text/javascript">
+    const socket = new WebSocket("ws://localhost:3001");
+ 
+    socket.addEventListener("open", function() {
+        console.log("CONNECTED");
+    });
+</script>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 	<script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
 	<script src="{{asset ('js-front/headroom.min.js')}}"></script>

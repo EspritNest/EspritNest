@@ -4,10 +4,6 @@ controllers:
         namespace: App\Controller
     type: attribute
 app_front:
-    path: /front
-    controller: App\Controller\FrontController::index
-
-app_home:
     path: /
-    controller: App\Controller\HomeController::index
+    controller: App\Controller\FrontController::index
 

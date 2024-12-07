@@ -1,0 +1,114 @@
+/* General Styles */
+body {
+    background-color: #f8f9fa;
+    font-family: 'Open Sans', sans-serif;
+    margin: 0;
+    padding: 0;
+    height: 100vh; /* Ensure full height */
+}
+
+/* Adjust the .registration-container to account for the fixed navbar */
+.registration-container {
+    margin:20rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 60px); /* Subtract the height of the fixed navbar */
+    padding-top: 60px; /* Add padding to account for the navbar */
+    background-color: #FFFFFF;
+}
+
+.registration-form {
+    margin-top: 100px;
+    width: 100%;
+    max-width: 500px;
+    padding: 50px;
+    background:#FFFFFF;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.registration-form h1 {
+    margin-bottom: 20px;
+    color: #333;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.registration-form .form-description {
+    font-size: 14px;
+    color: #FFFFFF;
+    margin-bottom: 20px;
+}
+
+label {
+    text-align: left;
+    display: block;
+    font-weight: bold;
+    margin: 10px 0 5px;
+    color: #555;
+}
+
+input.form-control, input.form-check-input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+input.form-control-file {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+}
+
+button.btn {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+button.btn-primary {
+    background-color: #007bff;
+    color: #fff;
+    transition: background-color 0.3s;
+}
+
+button.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+button.btn-secondary {
+    background-color: #6c757d;
+    color: #fff;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+}
+
+button.btn-secondary:hover {
+    background-color: #495057;
+}
+
+.alert {
+    margin-bottom: 20px;
+    font-size: 14px;
+    text-align: center;
+}
+
+.login-link {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.login-link span {
+    display: block;
+    margin-bottom: 10px;
+    color: #555;
+}

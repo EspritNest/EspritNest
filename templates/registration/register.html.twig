@@ -2,28 +2,61 @@
 
 {% block title %}Register{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css-front/register.css') }}">
+{% endblock %}
+
 {% block body %}
     {% for flash_error in app.flashes('verify_email_error') %}
         <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
     {% endfor %}
 
-    <h1 style="font-family: Arial, sans-serif; color: #333; text-align: center; margin-bottom: 20px;">Register</h1>
     <div class="registration-container">
-        <div class="registration-form">
-            <h2>Create your account</h2>
-            <p>Please fill in the form to create an account.</p>
-        </div>
+        <form method="post" enctype="multipart/form-data" class="registration-form">
+            <h1>Create Your Account</h1>
+            <p class="form-description">Fill in the form below to register.</p>
+
+            {{ form_errors(registrationForm) }}
+
+            <!-- Full Name -->
+            {{ form_row(registrationForm.nom, {
+                'attr': {'class': 'form-control', 'placeholder': 'Enter your full name'}
+            }) }}
+
+            <!-- Email -->
+            {{ form_row(registrationForm.email, {
+                'attr': {'class': 'form-control', 'placeholder': 'Enter your email address'}
+            }) }}
+
+            <!-- Phone Number -->
+            {{ form_row(registrationForm.Tel, {
+                'attr': {'class': 'form-control', 'placeholder': 'Enter your phone number'}
+            }) }}
+
+            <!-- Profile Image URL (Optional) -->
+            {{ form_row(registrationForm.img, {
+                'label': 'Profile Image URL (optional)',
+                'attr': {'class': 'form-control', 'placeholder': 'Enter a URL for your profile image'}
+            }) }}
+
+            <!-- Password -->
+            {{ form_row(registrationForm.plainPassword, {
+                'label': 'Password',
+                'attr': {'class': 'form-control', 'placeholder': 'Enter a strong password'}
+            }) }}
+
+            <!-- Terms and Conditions Checkbox -->
+            {{ form_row(registrationForm.agreeTerms, {
+                'attr': {'class': 'form-check-input'}
+            }) }}
+
+            <button type="submit" class="btn btn-primary">Register</button>
+
+            <div class="login-link">
+                <span>Already have an account?</span>
+                <a href="{{ path('app_login') }}" class="btn btn-secondary">Sign in</a>
+            </div>
+        </form>
     </div>
-
-    {{ form_errors(registrationForm) }}
-
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
-
-        <button type="submit" class="btn">Register</button>
-    {{ form_end(registrationForm) }}
 {% endblock %}
