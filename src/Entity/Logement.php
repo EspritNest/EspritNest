@@ -37,7 +37,7 @@ class Logement
     private ?float $superficie = null;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank (message:"description is required")]
+    // #[Assert\NotBlank (message:"description is required")]
     private ?string $Description = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]

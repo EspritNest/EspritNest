@@ -15,14 +15,14 @@
 	<link rel="stylesheet" href="{{asset ('css-front/font-awesome.min.css')}}">
 
     <!-- Custom styles for our template -->
-
- {{ parent() }}
+{% block stylesheets %}
+ {# {{ parent() }} #}
     <link rel="stylesheet" href="{{ asset('css-front/register.css') }}">
-    <style>
+    {# <style>
         body {
             padding-top: 15rem; /* Adjust this value to create the gap you want between the navbar and body */
         }
-    </style>
+    </style> #}
   
 	<link rel="stylesheet" href="{{asset ('css-front/bootstrap-theme.css')}}" media="screen" >
 	<link rel="stylesheet" href="{{asset ('css-front/main.css')}}">
@@ -34,22 +34,23 @@
 	<![endif]-->
 </head>
 
-
+{% endblock %}
 
 <body class="home">
+{% block nav %}
 	<!-- Fixed navbar -->
 	 <div class="navbar navbar-inverse  headroom" > 
 		<div class="container">
 			<div class="navbar-header">
 				<!-- Button for smallest screens -->
 				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
-				<a class="navbar-brand" href="index.html"><img src="{{asset ('images-front/logo.png')}}" alt="Progressus HTML5 template"></a>
+				<a class="navbar-brand" href="index.html"><img src="{{asset ('images-front/5.png')}}" alt="logo"></a>
 			</div>
 			<div class="navbar-collapse collapse">
 				<ul class="nav navbar-nav pull-right">
 					<li class="active"><a href="/">Home</a></li>
-					<li><a href="#">Trajet</a></li>
-					<li><a href="#">Co-location</a></li>
+					<li><a href="trajets">Co-voiturage</a></li>
+					<li><a href="annonces">Co-location</a></li>
 					<li><a href="#">About</a></li>
 					{% if app.user %}
 						<li class="dropdown">
@@ -58,9 +59,10 @@
 							</a>
 							<ul class="dropdown-menu">
 								<li><a href="#">Profile</a></li>
-								<li><a href="#">Mes Trajects</a></li>
-								<li><a href="#">Mes Voitures</a></li>
-								<li><a href="#">Mes Annonces</a></li>
+								<li><a href="trajets">Mes Trajects</a></li>
+								<li><a href="voitures">Mes Voitures</a></li>
+								<li><a href="annonces">Mes Annonces</a></li>
+								<li><a href="logement">Mes Logements</a></li>
 								<li><a href="discussions">Mes Discussions</a></li>
 								<li><a href="logout">Logout</a></li>
 							</ul>
@@ -78,15 +80,26 @@
 	<!-- /.navbar -->
 
 	<!-- Header -->
-	<header id="head">
-		<div class="container">
-			<div class="row">
-				<h1 class="lead">AWESOME, CUSTOMIZABLE, FREE</h1>
-				<p class="tagline">PROGRESSUS: free business bootstrap template by <a href="http://www.gettemplate.com/?utm_source=progressus&amp;utm_medium=template&amp;utm_campaign=progressus">GetTemplate</a></p>
-				<p><a class="btn btn-default btn-lg" role="button">MORE INFO</a> <a class="btn btn-action btn-lg" role="button">DOWNLOAD NOW</a></p>
-			</div> #}
-		{# </div> #}
-	{# </header> #}
+<header id="head" style="
+    background: url('{{ asset('images-front/esprit.jpg') }}') no-repeat center center; 
+    background-size: cover; 
+     background-attachment: fixed; /* Ajoute un effet de parallaxe */
+       padding: 100px 0; /* Ajoute de l'espace en haut et en bas */ 
+     color: white; /* Assure que le texte est lisible */  
+     text-align: center; /* Centre le texte horizontalement */ 
+">
+    <div class="container">
+        <div class="row">
+            <h1 class="lead">Welcome To EspritNest</h1>
+           <p class="tagline" style="color: red;">EspritNest: Simplify your travels and your daily life</p>
+            <p>
+                <a class="btn btn-default btn-lg" role="button">MORE INFO</a>
+                <a class="btn btn-action btn-lg" role="button">REGISTER NOW</a>
+            </p>
+        </div> 
+    </div> 
+</header>
+	
 				{% endblock %}
 			</div><!--/.nav-collapse -->
 		</div>
@@ -202,30 +215,28 @@
 		</div>
 	</section>
 	<!-- /social links --> #}
-  {% block body %}
-
-  {% endblock %}
 
 
 	<footer id="footer" class="top-space">
 {% block footer %}
-		{# <div class="footer1">
+		<div class="footer1">
 			<div class="container">
 				<div class="row">
 					
 					<div class="col-md-3 widget">
 						<h3 class="widget-title">Contact</h3>
 						<div class="widget-body">
-							<p>+234 23 9873237<br>
-								<a href="mailto:#">some.email@somewhere.com</a><br>
+							<p>+216 70-123-321<br>
+							<br>
+								<a href="mailto:#">EspritNest@esprit.tn</a><br>
 								<br>
-								234 Hidden Pond Road, Ashland City, TN 37015
+								Pôle Technologique El Ghazala, Ariana, Tunisia
 							</p>	
 						</div>
 					</div>
 
 					<div class="col-md-3 widget">
-						<h3 class="widget-title">Follow me</h3>
+						{# <h3 class="widget-title">Follow me</h3>
 						<div class="widget-body">
 							<p class="follow-me-icons">
 								<a href=""><i class="fa fa-twitter fa-2"></i></a>
@@ -233,14 +244,16 @@
 								<a href=""><i class="fa fa-github fa-2"></i></a>
 								<a href=""><i class="fa fa-facebook fa-2"></i></a>
 							</p>	
-						</div>
+						</div> #}
 					</div>
 
 					<div class="col-md-6 widget">
-						<h3 class="widget-title">Text widget</h3>
+						<h3 class="widget-title">About</h3>
 						<div class="widget-body">
-							<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Excepturi, dolores, quibusdam architecto voluptatem amet fugiat nesciunt placeat provident cumque accusamus itaque voluptate modi quidem dolore optio velit hic iusto vero praesentium repellat commodi ad id expedita cupiditate repellendus possimus unde?</p>
-							<p>Eius consequatur nihil quibusdam! Laborum, rerum, quis, inventore ipsa autem repellat provident assumenda labore soluta minima alias temporibus facere distinctio quas adipisci nam sunt explicabo officia tenetur at ea quos doloribus dolorum voluptate reprehenderit architecto sint libero illo et hic.</p>
+							<p>Bienvenue sur EspritNest, votre plateforme de confiance pour simplifier la recherche de covoiturages et de colocations !</p>
+							<p>Nous comprenons combien il peut être difficile de trouver une solution de transport 
+							pratique ou un logement partagé qui correspond à vos besoins. C’est pourquoi nous avons créé 
+							un espace dédié pour vous aider à vous connecter facilement avec des personnes partageant les mêmes objectifs.</p>
 						</div>
 					</div>
 
@@ -256,10 +269,9 @@
 						<div class="widget-body">
 							<p class="simplenav">
 								<a href="#">Home</a> | 
-								<a href="about.html">About</a> |
-								<a href="sidebar-right.html">Sidebar</a> |
-								<a href="contact.html">Contact</a> |
-								<b><a href="signup.html">Sign up</a></b>
+								<a href="trajets">Covoiturage</a> |
+								<a href="annonces">Co-location</a> |
+								<b><a href="register">Sign up</a></b>
 							</p>
 						</div>
 					</div>
@@ -267,14 +279,14 @@
 					<div class="col-md-6 widget">
 						<div class="widget-body">
 							<p class="text-right">
-								Copyright &copy; 2014, Your name. Designed by <a href="http://gettemplate.com/" rel="designer">gettemplate</a> 
+								Copyright &copy; 2024, EspritNest. Designed by <a href="http://gettemplate.com/" rel="designer">4 software engineer</a> 
 							</p>
 						</div>
 					</div>
 
 				</div> <!-- /row of widgets -->
 			</div>
-		</div> #}
+		</div>
 {% endblock %}
 	</footer>	
 		
