@@ -3,13 +3,16 @@
 namespace App\Controller;
 
 use App\Entity\Logement;
+use App\Entity\Utilisateur; 
 use App\Form\LogementType;
 use App\Repository\LogementRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 #[Route('/logement')]
 final class LogementController extends AbstractController
@@ -23,14 +26,37 @@ final class LogementController extends AbstractController
     }
 
     #[Route('/new', name: 'app_logement_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
+    
     {
         $logement = new Logement();
         $form = $this->createForm(LogementType::class, $logement);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $description = $form->get('Description')->getData();
+
+            // this condition is needed because the 'brochure' field is not required
+            // so the PDF file must be processed only when a file is uploaded
+            if ($description) {
+                $originalFilename = pathinfo($description->getClientOriginalName(), PATHINFO_FILENAME);
+                // this is needed to safely include the file name as part of the URL
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$description->guessExtension();
+
+                // Move the file to the directory where brochures are stored
+                try {
+                    $description->move($this->getParameter('logement_directory'), $newFilename);
+                } catch (FileException $e) {
+                    // ... handle exception if something happens during file upload
+                }
+
+                // updates the 'brochureFilename' property to store the PDF file name
+                // instead of its contents
+                $logement->setDescription($newFilename);
+            }
             $entityManager->persist($logement);
+
             $entityManager->flush();
 
             return $this->redirectToRoute('app_logement_index', [], Response::HTTP_SEE_OTHER);

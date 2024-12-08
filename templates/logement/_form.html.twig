@@ -1,4 +1,82 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+{{ form_start(form, {'attr': {'class': 'form-wrapper', 'novalidate': 'novalidate'}}) }}
+    {% for field in form %}
+        <div class="form-group">
+            <label class="form-label" for="{{ field.vars.id }}">{{ form_label(field) }}</label>
+            {{ form_widget(field, {'attr': {'class': 'form-control custom-input'}}) }}
+            <div class="invalid-feedback">
+                {{ form_errors(field) }}
+            </div>
+        </div>
+    {% endfor %}
+    
+    <div class="form-group text-center">
+        <button type="submit" class="btn btn-submit">
+            {{ button_label|default('Save') }}
+        </button>
+    </div>
 {{ form_end(form) }}
+
+<style>
+    /* Wrapper for the form */
+    .form-wrapper {
+        max-width: 600px;
+        margin: 30px auto;
+        padding: 40px;
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-group {
+        margin-bottom: 25px;
+    }
+
+    .form-label {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 8px;
+    }
+
+    .custom-input {
+        width: 100%;
+        padding: 12px;
+        font-size: 1rem;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        background-color: #f8f9fa;
+        transition: border-color 0.3s ease;
+    }
+
+    .custom-input:focus {
+        border-color: #007bff;
+        outline: none;
+    }
+
+    .invalid-feedback {
+        display: block;
+        font-size: 0.875rem;
+        color: #dc3545;
+        margin-top: 5px;
+    }
+
+    .btn-submit {
+        padding: 15px 30px;
+        font-size: 1.2rem;
+        color: white;
+        background-color: #007bff;
+        border: none;
+        border-radius: 5px;
+        width: 100%;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-submit:hover {
+        background-color: #0056b3;
+    }
+
+    .btn-submit:focus {
+        outline: none;
+        box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.5);
+    }
+</style>

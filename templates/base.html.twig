@@ -4,11 +4,15 @@
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-
+ <title>{% block title %} Dashboard - EspritNest {% endblock%} </title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
- 
+
+
+  <!-- Favicons -->
+  <link href="{{asset ('img/favicon.png')}}" rel="icon">
+  <link href="{{asset ('img/apple-touch-icon.png')}}" rel="apple-touch-icon">
 
   <!-- Google Fonts -->
   <link href="https://fonts.gstatic.com" rel="preconnect">
@@ -17,7 +21,16 @@
   <!-- Vendor CSS Files -->
 
   {% block stylesheets %}
-  
+  <link href="{{asset ('vendor/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
+  <link href="{{asset ('vendor/bootstrap-icons/bootstrap-icons.css')}}" rel="stylesheet">
+  <link href="{{asset ('vendor/boxicons/css/boxicons.min.css')}}" rel="stylesheet">
+  <link href="{{asset ('vendor/quill/quill.snow.css')}}" rel="stylesheet">
+  <link href="{{asset ('vendor/quill/quill.bubble.css')}}" rel="stylesheet">
+  <link href="{{asset ('vendor/remixicon/remixicon.css')}}" rel="stylesheet">
+  <link href="{{asset ('vendor/simple-datatables/style.css')}}" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link href="{{asset ('css/style.css')}}" rel="stylesheet">
 {% endblock %}
   <!-- =======================================================
   * Template Name: NiceAdmin
@@ -26,20 +39,109 @@
   * Author: BootstrapMade.com
   * License: https://bootstrapmade.com/license/
   ======================================================== -->
+  <!-- ======= Header ======= -->
+  <header id="header" class="header  d-flex align-items-center">
+
+    <div class="d-flex align-items-center justify-content-between">
+      <a href="index.html" class="logo d-flex align-items-center">
+        <img src="{{asset ('img/logo.png')}}" alt="">
+        <span class="d-none d-lg-block">NiceAdmin</span>
+      </a>
+      <i class="bi bi-list toggle-sidebar-btn"></i>
+    </div><!-- End Logo -->
+{% block nav %}
+    <div class="search-bar">
+      <form class="search-form d-flex align-items-center" method="POST" action="#">
+        <input type="text" name="query" placeholder="Search" title="Enter search keyword">
+        <button type="submit" title="Search"><i class="bi bi-search"></i></button>
+      </form>
+    </div><!-- End Search Bar -->
+
+    <nav class="header-nav ms-auto">
+      <ul class="d-flex align-items-center">
+
+        <li class="nav-item d-block d-lg-none">
+          <a class="nav-link nav-icon search-bar-toggle " href="#">
+            <i class="bi bi-search"></i>
+          </a>
+        </li><!-- End Search Icon-->
+
+          
+
+      </ul>
+    </nav><!-- End Icons Navigation -->
+
+  </header><!-- End Header -->
+{% endblock %}
+
+{% block navside %}
+ <aside id="sidebar" class="sidebar">
+
+    <ul class="sidebar-nav" id="sidebar-nav">
+
+      <li class="nav-item">
+        <a class="nav-link " href="admin/users">
+          <i class="bi bi-grid"></i>
+          <span>Gestion Utilisateur</span>
+        </a>
+      </li><!-- End Dashboard Nav -->
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
+          <i class="bi bi-menu-button-wide"></i><span>Gestion Colocation</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+          <li>
+            <a href="components-alerts.html">
+              <i class="bi bi-circle"></i><span>Annonces</span>
+            </a>
+          </li>
+          <li>
+            <a href="components-accordion.html">
+              <i class="bi bi-circle"></i><span>Logements</span>
+            </a>
+          </li>
+      
+        </ul>
+      </li><!-- End Components Nav -->
+    </ul>
+
+  </aside>
+{% endblock %}
+
 </head>
+
+
+
 
 <body>
 
-{% block nav %}
 
-{% endblock %}
+ 
+
   {% block body %}
+ {% endblock %}
+
+
+  <!-- ======= Footer ======= -->
+  <footer id="footer" class="footer">
+  {% block footer %}
+ 
     {% endblock %}
   
    {% block javascripts %}
--->
+  <script src="{{asset ('vendor/apexcharts/apexcharts.min.js')}}"></script>
+  <script src="{{asset ('vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+  <script src="{{asset ('vendor/chart.js/chart.umd.js')}}"></script>
+  <script src="{{asset ('vendor/echarts/echarts.min.js')}}"></script>
+  <script src="{{asset ('vendor/quill/quill.js')}}"></script>
+  <script src="{{asset ('vendor/simple-datatables/simple-datatables.js')}}"></script>
+  <script src="{{asset ('vendor/tinymce/tinymce.min.js')}}"></script>
+  <script src="{{asset ('vendor/php-email-form/validate.js')}}"></script>
+
+  <!-- Template Main JS File -->
   <script src="{{asset ('js/main.js')}}"></script>
 {% endblock %}
 </body>
 
-</html>
+</html> 
