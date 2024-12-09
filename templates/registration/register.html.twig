@@ -19,6 +19,9 @@
 
             {{ form_errors(registrationForm) }}
 
+            <!-- CSRF Token -->
+            {{ form_row(registrationForm._token) }}
+
             <!-- Full Name -->
             {{ form_row(registrationForm.nom, {
                 'attr': {'class': 'form-control', 'placeholder': 'Enter your full name'}

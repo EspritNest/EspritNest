@@ -9,14 +9,22 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 class RegistrationFormType extends AbstractType
 {
+    private $csrfTokenManager;
+
+    public function __construct(CsrfTokenManagerInterface $csrfTokenManager)
+    {
+        $this->csrfTokenManager = $csrfTokenManager;
+    }
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -70,6 +78,13 @@ class RegistrationFormType extends AbstractType
                         'message' => 'You must agree to the terms and conditions.',
                     ]),
                 ],
+            ])
+            ->add('_csrf_token', HiddenType::class, [
+                'mapped' => false,
+                'data' => $this->csrfTokenManager->getToken('authenticate')->getValue(),
+            ])
+            ->add('_token', HiddenType::class, [
+                'mapped' => false,
             ]);
     }
 
@@ -77,6 +92,9 @@ class RegistrationFormType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Utilisateur::class,
+            'csrf_protection' => true,
+            'csrf_field_name' => '_token',
+            'csrf_token_id'   => 'registration_item',
         ]);
     }
 }
