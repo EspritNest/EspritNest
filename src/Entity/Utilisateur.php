@@ -59,11 +59,18 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToOne(mappedBy: 'ProprietaireId', cascade: ['persist', 'remove'])]
     private ?Logement $logement = null;
 
+    /**
+     * @var Collection<int, Logement>
+     */
+    #[ORM\OneToMany(targetEntity: Logement::class, mappedBy: 'ProprietaireId')]
+    private Collection $logements;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
         $this->isVerified = true; // Set isVerified to true by default
         $this->annoncesColocations = new ArrayCollection();
+        $this->logements = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -249,6 +256,36 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     public function __toString(): string
     {
         return $this->nom; 
+    }
+
+    /**
+     * @return Collection<int, Logement>
+     */
+    public function getLogements(): Collection
+    {
+        return $this->logements;
+    }
+
+    public function addLogement(Logement $logement): static
+    {
+        if (!$this->logements->contains($logement)) {
+            $this->logements->add($logement);
+            $logement->setProprietaireId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLogement(Logement $logement): static
+    {
+        if ($this->logements->removeElement($logement)) {
+            // set the owning side to null (unless already changed)
+            if ($logement->getProprietaireId() === $this) {
+                $logement->setProprietaireId(null);
+            }
+        }
+
+        return $this;
     }
 }
 
