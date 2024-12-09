@@ -10,11 +10,13 @@ use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 class RegistrationFormType extends AbstractType
@@ -33,17 +35,35 @@ class RegistrationFormType extends AbstractType
                 'attr' => [
                     'placeholder' => 'Enter your full name',
                 ],
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Please enter your full name',
+                    ]),
+                ],
             ])
-            ->add('email', TextType::class, [
+            ->add('email', EmailType::class, [
                 'label' => 'Email Address',
                 'attr' => [
                     'placeholder' => 'Enter your email',
+                ],
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Please enter your email',
+                    ]),
+                    new Email([
+                        'message' => 'Please enter a valid email address',
+                    ]),
                 ],
             ])
             ->add('Tel', TelType::class, [
                 'label' => 'Phone Number',
                 'attr' => [
                     'placeholder' => 'Enter your phone number',
+                ],
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Please enter your phone number',
+                    ]),
                 ],
             ])
             ->add('img', UrlType::class, [

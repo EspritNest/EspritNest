@@ -142,6 +142,13 @@
   <!-- Template Main JS File -->
   <script src="{{asset ('js/main.js')}}"></script>
 {% endblock %}
+{% for label, messages in app.flashes %}
+    {% for message in messages %}
+        <div class="alert alert-{{ label }}">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endfor %}
 </body>
 
-</html> 
+</html>
