@@ -3,9 +3,11 @@
 namespace App\Form;
 
 use App\Entity\Utilisateur;
+use phpDocumentor\Reflection\PseudoTypes\Numeric_;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
@@ -17,6 +19,7 @@ use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 class RegistrationFormType extends AbstractType
@@ -36,6 +39,11 @@ class RegistrationFormType extends AbstractType
                     'placeholder' => 'Enter your full name',
                 ],
                 'constraints' => [
+                    new Length([
+                        'min' => 2,
+                        'minMessage' => 'Your full name should be at least {{ limit }} characters',
+                        'max' => 255,
+                    ]),
                     new NotBlank([
                         'message' => 'Please enter your full name',
                     ]),
@@ -55,7 +63,7 @@ class RegistrationFormType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('Tel', TelType::class, [
+            ->add('Tel',NumberType::class, [
                 'label' => 'Phone Number',
                 'attr' => [
                     'placeholder' => 'Enter your phone number',
@@ -63,6 +71,16 @@ class RegistrationFormType extends AbstractType
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Please enter your phone number',
+                    ]),
+                    new Regex([
+                        'pattern' => '/^\+?[1-9]\d{1,14}$/',  // International phone number format
+                        'message' => 'Please enter a valid phone number.',
+                    ]),
+                    new Length([
+                        'min' => 8,
+                        'minMessage' => 'Phone number must be at least {{ limit }} digits long.',
+                        'max' => 15,  // Adjust max length based on your requirements
+                        'maxMessage' => 'Phone number cannot be longer than {{ limit }} digits.',
                     ]),
                 ],
             ])

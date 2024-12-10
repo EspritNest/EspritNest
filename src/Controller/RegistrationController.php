@@ -49,13 +49,13 @@ class RegistrationController extends AbstractController
             $signatureComponents = $this->verifyEmailHelper->generateSignature(
                 'app_verify_email',
                 $user->getId(),
-                $user->getVerificationToken(),
-                ['id' => $user->getId()]
+                $user->getEmail(),
+                ['id' => $user->getId()] // Ensure the user ID and email are passed correctly
             );
 
             // Send verification email
             $email = (new Email())
-                ->from('no-reply@espritNest.tn')
+                ->from('rayenguedri24@gmail.com')
                 ->to($user->getEmail())
                 ->subject('Please Confirm your Email')
                 ->html('<p>Click the following link to verify your email: <a href="' . $signatureComponents->getSignedUrl() . '">Verify Email</a></p>');
@@ -76,33 +76,28 @@ class RegistrationController extends AbstractController
 
     #[Route('/verify/email', name: 'app_verify_email')]
     public function verifyUserEmail(Request $request, EntityManagerInterface $entityManager): Response
-    {
-        $id = $request->get('id');
+{
+    $id = $request->get('id');
+    $user = $entityManager->getRepository(Utilisateur::class)->find($id);
 
-        if (null === $id) {
-            return $this->redirectToRoute('app_register');
-        }
-
-        $user = $entityManager->getRepository(Utilisateur::class)->find($id);
-
-        if (null === $user) {
-            return $this->redirectToRoute('app_register');
-        }
-
-        // Validate email confirmation link, sets User::isVerified=true and persists
-        try {
-            $this->verifyEmailHelper->validateEmailConfirmation($request->getUri(), $user->getId(), $user->getEmail());
-            $user->setIsVerified(true);
-            $entityManager->persist($user);
-            $entityManager->flush();
-        } catch (VerifyEmailExceptionInterface $exception) {
-            $this->addFlash('verify_email_error', $exception->getReason());
-
-            return $this->redirectToRoute('app_register');
-        }
-
-        $this->addFlash('success', 'Your email address has been verified.');
-
-        return $this->redirectToRoute('app_login');
+    if (null === $user) {
+        return $this->redirectToRoute('app_register');
     }
+
+    try {
+        // Validate email confirmation link
+        $this->verifyEmailHelper->validateEmailConfirmation($request->getUri(), $user->getId(), $user->getEmail());
+
+        // Mark the user as verified
+        $user->setVerified(true);
+        $entityManager->persist($user);
+        $entityManager->flush();
+    } catch (VerifyEmailExceptionInterface $exception) {
+        $this->addFlash('verify_email_error', $exception->getReason());
+        return $this->redirectToRoute('app_register');
+    }
+
+    $this->addFlash('success', 'Your email address has been verified.');
+    return $this->redirectToRoute('app_login');
+}
 }
