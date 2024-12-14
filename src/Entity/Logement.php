@@ -45,17 +45,19 @@ class Logement
     private ?\DateTimeInterface $date_ajout = null;
 
   
-
+    
     /**
      * @var Collection<int, AnnoncesColocation>
      */
     #[ORM\OneToMany(targetEntity: AnnoncesColocation::class, mappedBy: 'Logement')]
     private Collection $Annonces;
 
-    #[ORM\OneToOne(inversedBy: 'logement', cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(inversedBy: 'logements')]
     #[ORM\JoinColumn(nullable: false)]
     #[Assert\NotBlank (message:"proprietaire id is required")]
     private ?Utilisateur $ProprietaireId = null;
+
+
 
     public function __construct()
     {
@@ -159,20 +161,22 @@ class Logement
         return $this;
     }
 
+
+
+    public function __toString(): string
+    {
+        return $this->Adresse; 
+    }
+
     public function getProprietaireId(): ?Utilisateur
     {
         return $this->ProprietaireId;
     }
 
-    public function setProprietaireId(Utilisateur $ProprietaireId): static
+    public function setProprietaireId(?Utilisateur $ProprietaireId): static
     {
         $this->ProprietaireId = $ProprietaireId;
 
         return $this;
-    }
-
-    public function __toString(): string
-    {
-        return $this->Code_postal; 
     }
 }

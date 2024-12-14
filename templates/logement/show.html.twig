@@ -3,16 +3,16 @@
 {% block title %}Logement{% endblock %}
 
 {% block body %}
-    <h1>Logement</h1>
+    
 <div class="container mt-5">
     <h1 class="text-center mb-4">Logement</h1>
 
     <table class="table table-bordered shadow-sm">
         <tbody>
-            <tr>
+            {# <tr>
                 <th class="table-primary">Id</th>
                 <td>{{ logement.id }}</td>
-            </tr>
+            </tr> #}
             <tr>
                 <th class="table-primary">Adresse</th>
                 <td>{{ logement.Adresse }}</td>
@@ -27,7 +27,11 @@
             </tr>
             <tr>
                 <th class="table-primary">Description</th>
-                <td>{{ logement.Description }}</td>
+                <td>{% if logement.Description %}
+                        <img src="{{ asset('uploads/logement/' ~ logement.Description) }}" alt="{{ logement.Adresse }}" width="100" height="100" class="rounded-circle">
+                    {% else %}
+                        Pas de photo disponible
+                    {% endif %}</td>
             </tr>
             <tr>
                 <th>Date_ajout</th>
@@ -43,12 +47,21 @@
     <a href="{{ path('app_logement_index') }}" class="btn btn-secondary">
     <i class="bi bi-arrow-left"></i>back to list</a>
 
+     {# <a href="{{ path('app_logement_edit', {'id': logement.id}) }}" class="btn btn-warning">
+    <i class="bi bi-pencil"></i>edit</a>  #}
+
+    {% if userid == logement.ProprietaireId.id %}
     <a href="{{ path('app_logement_edit', {'id': logement.id}) }}" class="btn btn-warning">
-    <i class="bi bi-pencil"></i>edit</a>
+        <i class="bi bi-pencil"></i>Edit
+    </a>
+{% endif %}
     </div>
+    {% if userid == logement.ProprietaireId.id %}
     <div class="mt-3">
+    
     {{ include('logement/_delete_form.html.twig') }}
     </div>
+    {% endif %}
     </div>
     <style>
         .btn i {
