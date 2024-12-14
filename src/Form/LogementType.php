@@ -50,6 +50,7 @@ class LogementType extends AbstractType
                 'class' => Utilisateur::class,
                 'choice_label' => 'id',
             ])
+            
         ;
     }
 
