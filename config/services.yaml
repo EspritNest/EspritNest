@@ -1,18 +1,21 @@
-# This file is the entry point to configure your own services.
-# Files in the packages/ subdirectory configure your dependencies.
-
-# Put parameters here that don't need to change on each machine where the app is deployed
-# https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
-    logement_directory : '%kernel.project_dir%/public/uploads/logement'
-services:
-    # default configuration for services in *this* file
-    _defaults:
-        autowire: true      # Automatically injects dependencies in your services.
-        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+    logement_directory: '%kernel.project_dir%/public/uploads/logement'
 
-    # makes classes in src/ available to be used as services
-    # this creates a service per class whose id is the fully-qualified class name
+services:
+    App\Twig\Extension\TimeAgoExtension: ~
+
+    App\Service\ProfanityFilterService:
+        arguments:
+            $client: '@http_client'  # Symfony HTTP Client
+            $requestFactory: '@nyholm.psr7.factory'  # Custom service alias for Nyholm PSR-7 Factory
+            $uriFactory: '@nyholm.psr7.factory'  # Same factory for UriFactoryInterface
+
+    # Default service configuration
+    _defaults:
+        autowire: true      # Automatically inject dependencies.
+        autoconfigure: true # Automatically register services as commands, event subscribers, etc.
+
+    # Makes classes in src/ available as services
     App\:
         resource: '../src/'
         exclude:
@@ -20,5 +23,11 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
 
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
+    # Manually define the PSR-17 factory service for Nyholm
+    nyholm.psr7.factory:
+        class: Nyholm\Psr7\Factory\Psr17Factory
+
+    # PSR-7 message factories (use the custom Nyholm factory)
+    Psr\Http\Message\RequestFactoryInterface: '@nyholm.psr7.factory'
+    Psr\Http\Message\StreamFactoryInterface: '@nyholm.psr7.factory'
+    Psr\Http\Message\UriFactoryInterface: '@nyholm.psr7.factory'

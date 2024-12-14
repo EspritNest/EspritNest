@@ -165,7 +165,7 @@ class Logement
 
     public function __toString(): string
     {
-        return $this->Code_postal; 
+        return $this->Adresse; 
     }
 
     public function getProprietaireId(): ?Utilisateur

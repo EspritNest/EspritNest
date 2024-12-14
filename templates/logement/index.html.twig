@@ -4,63 +4,76 @@
 
 {% block body %}
 <div class="container mt-5">
+<div class="container" data-aos="fade-up">
     <h1 class="text-center mb-4">Logement index</h1>
-   
-    <table class="table table-striped table-hover shadow-sm">
-        <thead class="table-primary">
-            <tr>
-                <th>Id</th>
-                <th>Adresse</th>
-                <th>Code_postal</th>
-                <th>Superficie</th>
-                <th>Description</th>
-                <th>Date_ajout</th>
-                <th>Proprietaire</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for logement in logements %}
-            <tr>
-                <td>{{ logement.id }}</td>
-                <td>{{ logement.Adresse }}</td>
-                <td>{{ logement.CodePostal }}</td>
-                <td>{{ logement.superficie }}</td>
-                <td>{{ logement.Description }}</td>
-                <td>{{ logement.dateAjout ? logement.dateAjout|date('Y-m-d') : '' }}</td>
-                <td>{{ logement.ProprietaireId }}</td>
-                <td>
-                    <a href="{{ path('app_logement_show', {'id': logement.id}) }}" class="btn btn-sm text-primary" title="Voir">
-                    <i class="bi bi-eye"></i>show</a>
-                    <a href="{{ path('app_logement_edit', {'id': logement.id}) }}" class="btn btn-sm text-warning" title="Modifier">
-                    <i class="bi bi-pencil"></i>edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="8">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-<div class="d-flex justify-content-end mb-5">
-    <a href="{{ path('app_logement_new') }}" class="btn btn-success">
-    <i class="bi bi-plus-circle"></i>Create new</a>
 
+    <div class="row">
+        {% for logement in logements %}
+        {# <div class="col-lg-3 mb-4" data-aos="fade-up" data-aos-delay="100"> #}
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm">
+                    <!-- Image de description -->
+                    {% if logement.Description %}
+                        <img src="{{ asset('uploads/logement/' ~ logement.Description) }}" class="card-img-top" alt="Image de {{ logement.Adresse }}">
+                    {% else %}
+                        <img src="{{ asset('uploads/logement/default.jpg') }}" class="card-img-top" alt="Image par défaut">
+                    {% endif %}
+                    
+                    <!-- Informations du logement -->
+                    <div class="card-body">
+                        <h5 class="card-title">{{ logement.Adresse }}</h5>
+                        <p class="card-text">
+                            <strong>Code Postal:</strong> {{ logement.CodePostal }}<br>
+                            <strong>Superficie:</strong> {{ logement.superficie }} m²<br>
+                            <strong>Date d'ajout:</strong> {{ logement.dateAjout ? logement.dateAjout|date('Y-m-d') : 'Non spécifiée' }}<br>
+                            <strong>Propriétaire:</strong> {{ logement.ProprietaireId ? logement.ProprietaireId.nom : 'Non spécifié' }}
+                        </p>
+                        <!-- Actions -->
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ path('app_logement_show', {'id': logement.id}) }}" class="btn btn-dark btn-sm" style="background-color: #5F0F40;">
+                            <strong>Show details</strong>
+                            </a>
+                            {% if userid == logement.ProprietaireId.id %}
+                                <a href="{{ path('app_logement_edit', {'id': logement.id}) }}" class="btn btn-primary" style="background-color: #1C1678;">>
+                                     Edit 
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="col-12 text-center">
+                <p class="text-muted">Aucun logement trouvé.</p>
+            </div>
+        {% endfor %}
+        </div>
     </div>
+<br>
+<div class="container mt-4 mb-5" style="text-align: right;">
+    <a href="{{ path('app_logement_new') }}" class="btn btn-success">
+        <i class="bi bi-plus-circle"></i> Create new logement
+    </a>
 </div>
 
+    
+</div>
 
 <style>
-    .btn i {
+    .card {
+        border-radius: 10px;
+        overflow: hidden;
+    }
+    .card-img-top {
+        height: 200px;
+        object-fit: cover;
+    }
+    .card-body {
+        background-color: #f9f9f9;
+    }
+    .btn-sm i {
         font-size: 1.2rem;
-        
+        margin-right: 5px;
     }
-    .btn-sm {
-        padding: 0.2rem 0.5rem;
-        
-    }
-    
-    
 </style>
 {% endblock %}

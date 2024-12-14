@@ -57,4 +57,20 @@ class UtilisateurRepository extends ServiceEntityRepository implements PasswordU
 //            ->getOneOrNullResult()
 //        ;
 //    }
+
+/**
+ * Find a user by their ID using a custom query.
+ *
+ * @param int $id The ID of the user.
+ * @return Utilisateur|null Returns the user object or null if not found.
+ */
+public function findUserById(int $id): ?Utilisateur
+{
+    return $this->createQueryBuilder('u')
+        ->andWhere('u.id = :id')
+        ->setParameter('id', $id)
+        ->getQuery()
+        ->getOneOrNullResult();
+}
+
 }

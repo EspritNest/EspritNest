@@ -56,8 +56,8 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: AnnoncesColocation::class, mappedBy: 'UserId')]
     private Collection $annoncesColocations;
 
-    #[ORM\OneToOne(mappedBy: 'ProprietaireId', cascade: ['persist', 'remove'])]
-    private ?Logement $logement = null;
+    // #[ORM\OneToOne(mappedBy: 'ProprietaireId', cascade: ['persist', 'remove'])]
+    // private ?Logement $logement = null;
 
     /**
      * @var Collection<int, Logement>
@@ -65,17 +65,45 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Logement::class, mappedBy: 'ProprietaireId')]
     private Collection $logements;
 
+    /**
+     * @var Collection<int, Comment>
+     */
+    #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'user')]
+    private Collection $comments;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
         $this->isVerified = true; // Set isVerified to true by default
         $this->annoncesColocations = new ArrayCollection();
         $this->logements = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function addCreatedlog(Logement $logement): static
+    {
+        if (!$this->logements->contains($logement)) {
+            $this->logements->add($logement);
+            $logement->setProprietaireId($this);
+
+        }
+
+        return $this;
+    }
+    public function addCreatedann(AnnoncesColocation $ann): static
+    {
+        if (!$this->annoncesColocations->contains($ann)) {
+            $this->annoncesColocations->add($ann);
+            $ann->setUserId($this);
+
+        }
+
+        return $this;
     }
 
     public function getEmail(): ?string
@@ -237,22 +265,22 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getLogement(): ?Logement
-    {
-        return $this->logement;
-    }
+    // public function getLogement(): ?Logement
+    // {
+    //     return $this->logement;
+    // }
 
-    public function setLogement(Logement $logement): static
-    {
-        // set the owning side of the relation if necessary
-        if ($logement->getProprietaireId() !== $this) {
-            $logement->setProprietaireId($this);
-        }
+    // public function setLogement(Logement $logement): static
+    // {
+    //     // set the owning side of the relation if necessary
+    //     if ($logement->getProprietaireId() !== $this) {
+    //         $logement->setProprietaireId($this);
+    //     }
 
-        $this->logement = $logement;
+    //     $this->logement = $logement;
 
-        return $this;
-    }
+    //     return $this;
+    // }
     public function __toString(): string
     {
         return $this->nom; 
@@ -282,6 +310,36 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($logement->getProprietaireId() === $this) {
                 $logement->setProprietaireId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Comment>
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): static
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments->add($comment);
+            $comment->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): static
+    {
+        if ($this->comments->removeElement($comment)) {
+            // set the owning side to null (unless already changed)
+            if ($comment->getUser() === $this) {
+                $comment->setUser(null);
             }
         }
 
