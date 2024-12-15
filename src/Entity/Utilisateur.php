@@ -75,6 +75,24 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'user')]
     private Collection $comments;
 
+    /**
+     * @var Collection<int, Messages>
+     */
+    #[ORM\OneToMany(targetEntity: Messages::class, mappedBy: 'sender')]
+    private Collection $messages;
+
+    /**
+     * @var Collection<int, Discussions>
+     */
+    #[ORM\OneToMany(targetEntity: Discussions::class, mappedBy: 'participant1')]
+    private Collection $discussionsAsParticipant1;
+
+    /**
+     * @var Collection<int, Discussions>
+     */
+    #[ORM\OneToMany(targetEntity: Discussions::class, mappedBy: 'participant2')]
+    private Collection $discussionsAsParticipant2;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
@@ -82,6 +100,9 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         $this->annoncesColocations = new ArrayCollection();
         $this->logements = new ArrayCollection();
         $this->comments = new ArrayCollection();
+        $this->messages = new ArrayCollection();
+        $this->discussionsAsParticipant1 = new ArrayCollection();
+        $this->discussionsAsParticipant2 = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -251,6 +272,11 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function getName(): string
+    {
+        return $this->nom;
+    }
+
     /**
      * @return Collection<int, AnnoncesColocation>
      */
@@ -361,5 +387,65 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, Messages>
+     */
+    public function getMessages(): Collection
+    {
+        return $this->messages;
+    }
+
+    public function addMessage(Messages $message): static
+    {
+        if (!$this->messages->contains($message)) {
+            $this->messages->add($message);
+            $message->setSender($this);
+        }
+
+        return $this;
+    }
+
+   
+
+    /**
+     * @return Collection<int, Discussions>
+     */
+    public function getDiscussionsAsParticipant1(): Collection
+    {
+        return $this->discussionsAsParticipant1;
+    }
+
+    public function addDiscussionAsParticipant1(Discussions $discussion): static
+    {
+        if (!$this->discussionsAsParticipant1->contains($discussion)) {
+            $this->discussionsAsParticipant1->add($discussion);
+            $discussion->setParticipant1($this);
+        }
+
+        return $this;
+    }
+
+    
+
+    /**
+     * @return Collection<int, Discussions>
+     */
+    public function getDiscussionsAsParticipant2(): Collection
+    {
+        return $this->discussionsAsParticipant2;
+    }
+
+    public function addDiscussionAsParticipant2(Discussions $discussion): static
+    {
+        if (!$this->discussionsAsParticipant2->contains($discussion)) {
+            $this->discussionsAsParticipant2->add($discussion);
+            $discussion->setParticipant2($this);
+        }
+
+        return $this;
+    }
+
+    
 }
 

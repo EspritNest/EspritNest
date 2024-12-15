@@ -17,15 +17,34 @@ final class DiscussionsController extends AbstractController
     #[Route(name: 'app_discussions_index', methods: ['GET'])]
     public function index(DiscussionsRepository $discussionsRepository): Response
     {
+        $user = $this->getUser();
+        if (!$user) {
+            throw $this->createAccessDeniedException('You must be logged in to view your discussions.');
+        }
+
+        $discussions = $discussionsRepository->findByParticipant($user);
+        $selectedDiscussion = null; // Define the selectedDiscussion variable
+
         return $this->render('discussions/index.html.twig', [
-            'discussions' => $discussionsRepository->findAll(),
+            'discussions' => $discussions,
+            'selectedDiscussion' => $selectedDiscussion, // Pass the variable to the template
         ]);
     }
+
 
     #[Route('/new', name: 'app_discussions_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
+        $user = $this->getUser();
+        if (!$user) {
+            throw $this->createAccessDeniedException('You must be logged in to create a discussion.');
+        }
+
         $discussion = new Discussions();
+        $discussion->setParticipant1($user);
+        $discussion->setCreatedAt(new \DateTimeImmutable());
+        $discussion->setUpdatedAt(new \DateTimeImmutable());
+
         $form = $this->createForm(DiscussionsType::class, $discussion);
         $form->handleRequest($request);
 
@@ -43,10 +62,20 @@ final class DiscussionsController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_discussions_show', methods: ['GET'])]
-    public function show(Discussions $discussion): Response
+    public function show(Discussions $discussion, DiscussionsRepository $discussionsRepository): Response
     {
-        return $this->render('discussions/show.html.twig', [
+        $user = $this->getUser();
+        if (!$user) {
+            throw $this->createAccessDeniedException('You must be logged in to view this discussion.');
+        }
+
+        $discussions = $discussionsRepository->findByParticipant($user);
+        $otherParticipant = $discussion->getOtherParticipant($user);
+
+        return $this->render('messages/chat.html.twig', [
             'discussion' => $discussion,
+            'otherParticipant' => $otherParticipant,
+            'discussions' => $discussions, // Pass the discussions variable to the template
         ]);
     }
 
