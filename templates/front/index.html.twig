@@ -58,7 +58,7 @@
 								<img src="{{ app.user.img }}" alt="User Avatar" class="user-avatar"> <b class="caret"></b>
 							</a>
 							<ul class="dropdown-menu">
-								<li><a href="#">Profile</a></li>
+								<li><a href="profile">Profile</a></li>
 								<li><a href="trajets">Mes Trajects</a></li>
 								<li><a href="voitures">Mes Voitures</a></li>
 								<li><a href="annonces">Mes Annonces</a></li>
@@ -296,14 +296,7 @@
 
 	<!-- JavaScript libs are placed at the end of the document so the pages load faster -->
 	{% block javascripts %}
-	
-	<script type="text/javascript">
-    const socket = new WebSocket("ws://localhost:3001");
- 
-    socket.addEventListener("open", function() {
-        console.log("CONNECTED");
-    });
-</script>
+
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 	<script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
 	<script src="{{asset ('js-front/headroom.min.js')}}"></script>

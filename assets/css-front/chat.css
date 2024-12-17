@@ -1,0 +1,106 @@
+/* Chat container */
+.chat-container {
+    width: 100%;
+    max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+}
+
+/* Messages list */
+.messages-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    height: 400px;
+    overflow-y: auto;
+    padding: 10px;
+    background-color: #f9f9f9;
+}
+
+/* Each message */
+.messages-list li {
+    margin-bottom: 10px;
+    display: flex;
+}
+
+/* User's message styles (right side) */
+.user-message {
+    background-color: #092849; /* Blue for user */
+    color: white;
+    text-align: right;
+    border-top-left-radius: 0;
+    margin-left: auto; /* Align on the right */
+    max-width: 70%;
+}
+
+/* Other person's message styles (left side) */
+.other-message {
+    background-color: #8b651f; /* Brown for other person */
+    color: white;
+    text-align: left;
+    border-top-right-radius: 0;
+    margin-right: auto; /* Align on the left */
+    max-width: 70%;
+}
+
+/* Chat bubble styles */
+.chat-bubble {
+    padding: 10px;
+    border-radius: 15px;
+    font-size: 14px;
+    line-height: 1.4;
+    word-wrap: break-word;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Message input container */
+.message-input {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+/* Input field */
+.message-input textarea {
+    flex: 1;
+    height: 50px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    resize: none;
+    font-size: 1em;
+}
+
+/* Send button */
+.message-input button {
+    padding: 10px 20px;
+    background-color: #FF9617; /* Orange color */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+.message-input button:hover {
+    background-color: #e87b14;
+}
+.status-indicator {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: gray; /* Default to offline */
+    margin-right: 5px;
+}
+
+.status-indicator.online {
+    background-color: green; /* Connected */
+}
+
+.status-indicator.offline {
+    background-color: gray; /* Disconnected */
+}

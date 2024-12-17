@@ -11,70 +11,72 @@ class Messages
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+    #[ORM\Column(type: 'integer')]
+    private int $id;
 
-    #[ORM\Column]
-    private ?int $discussions_id = null;
+    #[ORM\Column(type: 'text')]
+    private string $content;
 
-    #[ORM\Column]
-    private ?int $expéditeur_id = null;
+    #[ORM\Column(type: 'datetime')]
+    private \DateTimeInterface $sentAt;
 
-    #[ORM\Column(length: 255)]
-    private ?string $contenu = null;
+    #[ORM\ManyToOne(targetEntity: Utilisateur::class, inversedBy: 'messages')]
+    #[ORM\JoinColumn(nullable: false)]
+    private Utilisateur $sender;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTimeInterface $date_envoi = null;
+    #[ORM\ManyToOne(targetEntity: Discussions::class, inversedBy: 'messages')]
+    #[ORM\JoinColumn(nullable: false)]
+    private Discussions $discussion;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getDiscussionsId(): ?int
+    public function getContent(): ?string
     {
-        return $this->discussions_id;
+        return $this->content;
     }
 
-    public function setDiscussionsId(int $discussions_id): static
+    public function setContent(string $content): static
     {
-        $this->discussions_id = $discussions_id;
+        $this->content = $content;
 
         return $this;
     }
 
-    public function getExpéditeurId(): ?int
+    public function getSentAt(): ?\DateTimeInterface
     {
-        return $this->expéditeur_id;
+        return $this->sentAt;
     }
 
-    public function setExpéditeurId(int $expéditeur_id): static
+    public function setSentAt(\DateTimeInterface $sentAt): static
     {
-        $this->expéditeur_id = $expéditeur_id;
+        $this->sentAt = $sentAt;
 
         return $this;
     }
 
-    public function getContenu(): ?string
+    public function getSender(): ?Utilisateur
     {
-        return $this->contenu;
+        return $this->sender;
     }
 
-    public function setContenu(string $contenu): static
+    public function setSender(Utilisateur $sender): static
     {
-        $this->contenu = $contenu;
+        $this->sender = $sender;
 
         return $this;
     }
 
-    public function getDateEnvoi(): ?\DateTimeInterface
+    public function getDiscussion(): ?Discussions
     {
-        return $this->date_envoi;
+        return $this->discussion;
     }
 
-    public function setDateEnvoi(\DateTimeInterface $date_envoi): static
+    public function setDiscussion(Discussions $discussion): static
     {
-        $this->date_envoi = $date_envoi;
+        $this->discussion = $discussion;
 
         return $this;
     }
