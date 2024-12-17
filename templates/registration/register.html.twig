@@ -10,31 +10,32 @@
 {% block body %}
     {% for flash_error in app.flashes('verify_email_error') %}
         <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
-    {% endfor %}
+        {% endfor %}
 
-    <div class="registration-container">
+        <div class="registration-container">
+        {{ form_start(registrationForm,{'attr':{'novalidate':'novalidate'}}) }}
         <form method="post" enctype="multipart/form-data" class="registration-form">
             <h1>Create Your Account</h1>
             <p class="form-description">Fill in the form below to register.</p>
 
-            {{ form_errors(registrationForm) }}
+           
 
             <!-- CSRF Token -->
             {{ form_row(registrationForm._token) }}
 
             <!-- Full Name -->
             {{ form_row(registrationForm.nom, {
-                'attr': {'class': 'form-control', 'placeholder': 'Enter your full name'}
+            'attr': {'class': 'form-control', 'placeholder': 'Enter your full name'}
             }) }}
 
             <!-- Email -->
             {{ form_row(registrationForm.email, {
-                'attr': {'class': 'form-control', 'placeholder': 'Enter your email address'}
+            'attr': {'class': 'form-control', 'placeholder': 'Enter your email address'}
             }) }}
 
             <!-- Phone Number -->
             {{ form_row(registrationForm.Tel, {
-                'attr': {'class': 'form-control', 'placeholder': 'Enter your phone number'}
+            'attr': {'class': 'form-control', 'placeholder': 'Enter your phone number'}
             }) }}
 
             <!-- Profile Image URL (Optional) -->

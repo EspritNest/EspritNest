@@ -1,0 +1,120 @@
+{% extends 'discussions/index.html.twig' %}
+
+{% block stylesheets %}
+{{ parent() }}
+<link rel="stylesheet" href="{{ asset('css-front/chat.css') }}">
+{% endblock %}
+
+{% block title %}Chat{% endblock %}
+
+{% block chat_interface %}
+<div class="chat-container">
+   <div class="user-info">
+    <span id="userStatus" class="status-indicator offline"></span>
+    <span>{{ otherParticipant.getName() }}</span>
+</div>
+    <ul class="messages-list" id="messagesList">
+        {% for message in discussion.messages %}
+            <li>
+                <div class="chat-bubble {{ message.sender == app.user ? 'user-message' : 'other-message' }}">
+                    <strong>
+                        {% if message.sender == app.user %}
+                            You
+                        {% else %}
+                            {{ message.sender.getName() }}
+                        {% endif %}
+                    </strong>: {{ message.content }}
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+    <div class="message-input">
+        <form id="messageForm">
+            <textarea id="messageInput" placeholder="Type your message..." required></textarea>
+            <button type="submit">Send</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+    // Chat Initialization
+    const userId = "{{ app.user.id }}";
+    const otherParticipantId = "{{ otherParticipant.id }}";
+    const discussionId = "{{ discussion.id }}";
+    const socket = new WebSocket(`ws://localhost:3001?userId=${userId}`);
+    const messagesList = document.getElementById('messagesList');
+    const messageForm = document.getElementById('messageForm');
+    const messageInput = document.getElementById('messageInput');
+    const userStatus = document.getElementById('userStatus');
+
+    console.log('User ID:', userId, 'Other Participant ID:', otherParticipantId, 'Discussion ID:', discussionId);
+
+    // WebSocket Event Handlers
+    socket.addEventListener('open', () => {
+        console.log('Connected to WebSocket server');
+        socket.send(JSON.stringify({ type: 'status', userId: userId, status: 'connected' }));
+    });
+
+    socket.addEventListener('message', (event) => {
+        const data = JSON.parse(event.data);
+        console.log('Received data:', data);
+
+        if (data.type === 'status') {
+            if (data.userId === otherParticipantId) {
+                if (data.status === 'connected') {
+                    userStatus.classList.add('online');
+                    userStatus.classList.remove('offline');
+                } else {
+                    userStatus.classList.add('offline');
+                    userStatus.classList.remove('online');
+                }
+            }
+        } else if (data.error) {
+            console.error('Error:', data.error);
+        } else {
+            console.log('Message received:', data);
+            appendMessage(data.from == userId ? 'You' : data.from, data.content, data.from == userId);
+        }
+    });
+
+    socket.addEventListener('error', (event) => console.error('WebSocket error:', event));
+    socket.addEventListener('close', () => {
+        console.log('WebSocket connection closed');
+        userStatus.classList.add('offline');
+        userStatus.classList.remove('online');
+        socket.send(JSON.stringify({ type: 'status', userId: userId, status: 'disconnected' }));
+    });
+
+    // Form Submission Handler
+    messageForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const messageContent = messageInput.value.trim();
+
+        if (messageContent) {
+            const messageData = {
+                from: userId,
+                to: otherParticipantId,
+                content: messageContent,
+                discussionId: discussionId
+            };
+            socket.send(JSON.stringify(messageData));
+            appendMessage('You', messageContent, true);
+            messageInput.value = '';
+        }
+    });
+
+    // Append Message to UI
+    function appendMessage(sender, content, isUserMessage) {
+        const newMessage = document.createElement('li');
+        const messageDiv = document.createElement('div');
+        messageDiv.classList.add('chat-bubble', isUserMessage ? 'user-message' : 'other-message');
+        messageDiv.innerHTML = `<strong>${sender}:</strong> ${content}`;
+        newMessage.appendChild(messageDiv);
+        messagesList.appendChild(newMessage);
+        messagesList.scrollTop = messagesList.scrollHeight;
+    }
+</script>
+{% endblock %}

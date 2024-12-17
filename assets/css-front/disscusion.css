@@ -1,0 +1,52 @@
+.messenger-container {
+    display: flex; /* Use flexbox for layout */
+    height: 100vh; /* Take up the full viewport height */
+}
+
+.discussions-list {
+    width: 25%; /* Fixed width for the discussions list */
+    background-color: #f7f7f7;
+    border-right: 1px solid #ddd;
+    overflow-y: auto; /* Scroll if content overflows */
+    padding: 1rem;
+    box-sizing: border-box; /* Include padding in width */
+}
+
+.discussions-list ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.discussions-list ul li {
+    margin-bottom: 1rem;
+}
+
+.discussions-list .new-discussion {
+    display: block;
+    margin-top: 2rem;
+    text-align: center;
+    color: white;
+    background-color: #007BFF;
+    padding: 0.5rem;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+.discussions-list .new-discussion:hover {
+    background-color: #0056b3;
+}
+
+.discussion-details {
+    flex: 1; /* Take the remaining space */
+    padding: 1rem;
+    overflow-y: auto; /* Scroll if content overflows */
+    box-sizing: border-box;
+    background-color: #ffffff;
+}
+
+.placeholder-text {
+    color: #999;
+    text-align: center;
+    margin-top: 50%;
+}

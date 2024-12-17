@@ -1,40 +1,38 @@
 {% extends 'front/index.html.twig' %}
+{% block title %}My Discussions{% endblock %}
 
-
-
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css-front/disscusion.css') }}">
+{% endblock %}
 {% block body %}
-
-
     <div class="messenger-container">
+        <!-- Discussions List -->
         <div class="discussions-list">
             <h2>My Discussions</h2>
             <ul>
                 {% for discussion in discussions %}
+                    {% set otherParticipant = discussion.getOtherParticipant(app.user) %}
                     <li>
                         <a href="{{ path('app_discussions_show', {'id': discussion.id}) }}">
-                            Discussion with {{ discussion.utilisateur2Id }}
+                            {{ otherParticipant.getName() }}
+                            <br>
+                            {% set lastMessage = discussion.getLastMessage() %}
+                            Last message: {% if lastMessage %}{{ lastMessage.content }}{% else %}No messages yet{% endif %}
                         </a>
                     </li>
-                {% if selectedDiscussion and selectedDiscussion.id == discussion.id %}
-                    <div class="selected-discussion">
-                        <h3>Conversation with {{ discussion.utilisateur2Id }}</h3>
-                        <ul>
-                            {% for message in selectedDiscussion.messages %}
-                                <li>
-                                    <strong>{{ message.sender }}:</strong> {{ message.content }}
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                {% endif %}
                 {% else %}
                     <li>No discussions found</li>
                 {% endfor %}
             </ul>
-            <a href="{{ path('app_discussions_new') }}">Create new discussion</a>
+            <a href="{{ path('app_discussions_new') }}" class="new-discussion">Create new discussion</a>
         </div>
+
+        <!-- Placeholder for Chat Interface -->
         <div class="discussion-details">
-
-
-
+            {% block chat_interface %}
+                <p class="placeholder-text">Select a discussion to view messages</p>
+            {% endblock %}
+        </div>
+    </div>
 {% endblock %}

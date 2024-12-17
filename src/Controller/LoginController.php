@@ -22,6 +22,9 @@ class LoginController extends AbstractController
             'last_username' => $lastUsername,
             'error' => $error,
         ]);
+        if ($user && !$isVerified) {
+            return $this->redirectToRoute('app_verify_email'); // or a route for email verification page
+        }
     }
 
     #[Route(path: '/logout', name: 'app_logout')]
