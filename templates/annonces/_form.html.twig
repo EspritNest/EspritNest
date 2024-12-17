@@ -17,7 +17,7 @@
 {{ form_end(form) }}
 
 <style>
-    /* Wrapper for the form */
+    {# /* Wrapper for the form */
     .form-wrapper {
         max-width: 600px;
         margin: 30px auto;
@@ -79,4 +79,69 @@
         outline: none;
         box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.5);
     }
+
+        .form-control-lg {
+        font-size: 1.25rem; /* Augmenter la taille du texte */
+        padding: 15px;      /* Ajouter de l'espace à l'intérieur */
+        height: auto;       /* Ajuster la hauteur pour les champs */
+    } #}
+
+    .form-wrapper {
+    max-width: 700px; /* Limiter la largeur du formulaire */
+    margin: 0 auto;   /* Centrer le formulaire */
+    padding: 30px;    /* Ajouter de l'espace intérieur */
+    background-color: #f7f7f7; /* Couleur d'arrière-plan douce */
+    border-radius: 10px; /* Coins arrondis */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Ombre légère */
+}
+
+.form-group {
+    margin-bottom: 25px; /* Espacement entre les champs */
+}
+
+.form-label {
+    font-weight: bold; /* Mettre le texte des labels en gras */
+    color: #5F0F40; /* Couleur personnalisée pour les labels */
+    margin-bottom: 10px; /* Espacement sous le label */
+    font-size: 1.2rem; 
+    display: block; /* Mettre chaque label sur une ligne séparée */
+}
+
+.custom-input {
+    font-size: 1.2rem; /* Texte plus grand pour une meilleure lisibilité */
+    padding: 15px; /* Ajouter plus d'espace intérieur */
+    width: 100%;
+    border: 1px solid #ddd;
+    border-radius: 8px; /* Coins légèrement plus arrondis */
+    background-color: #fff;
+    transition: border-color 0.3s ease;
+    height: auto; /* Ajuster automatiquement la hauteur */
+}
+
+.custom-input:focus {
+    border-color: #5F0F40; /* Changer la couleur de la bordure au focus */
+    outline: none; /* Retirer le contour par défaut */
+    box-shadow: 0 0 8px rgba(95, 15, 64, 0.5); /* Ajouter une ombre légère */
+}
+
+.btn-submit {
+    background-color: #5F0F40; /* Couleur du bouton */
+    color: #fff; /* Couleur du texte */
+    padding: 12px 25px; /* Espacement intérieur */
+    font-size: 1.3rem; /* Taille du texte */
+    border: none; /* Supprimer les bordures */
+    border-radius: 8px; /* Coins arrondis */
+    cursor: pointer; /* Changer le curseur en pointeur */
+    transition: background-color 0.3s ease; /* Animation au survol */
+}
+
+.btn-submit:hover {
+    background-color: #3E0A28; /* Couleur plus foncée au survol */
+}
+
+.invalid-feedback {
+    font-size: 1rem; /* Texte plus petit pour les erreurs */
+    color: #d9534f; /* Rouge doux */
+    margin-top: 8px; /* Espacement au-dessus de l'erreur */
+}
 </style>

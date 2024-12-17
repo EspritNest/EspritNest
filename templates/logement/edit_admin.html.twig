@@ -1,1 +1,55 @@
 {% extends 'base.html.twig' %}
+
+{% block title %}Admin - Modifier Logement{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Modifier Logement</h1>
+
+    <div class="card shadow-sm p-4">
+        
+            <!-- Affichage de l'image actuelle -->
+            <div class="mb-4 text-center">
+                {% if logement.Description %}
+                    <p>Image actuelle :</p>
+                    <img src="{{ asset('uploads/logement/' ~ logement.Description) }}" alt="{{ logement.Adresse }}" class="img-fluid rounded" style="max-height: 200px; object-fit: cover;">
+                {% else %}
+                    <p class="text-muted">Aucune image disponible pour ce logement.</p>
+                {% endif %}
+            </div>
+
+  
+            {{ include('logement/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
+        
+    </div>
+
+    <!-- Boutons d'actions -->
+    <div class="mt-3 text-center">
+        <a href="{{ path('app_logement_index_ad') }}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Retour à la liste
+        </a>
+    </div>
+
+
+        <div class="mt-3 text-center">
+            {{ include('logement/_delete_form_admin.html.twig') }}
+        </div>
+   
+</div>
+
+<style>
+    .btn i {
+        font-size: 1.2rem;
+        margin-right: 5px;
+    }
+    .card {
+        border-radius: 10px;
+        background-color: #f9f9f9;
+    }
+    img {
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        padding: 5px;
+    }
+</style>
+{% endblock %}

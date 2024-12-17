@@ -10,11 +10,25 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 class LogementType extends AbstractType
 {
+    private $tokenStorage;
+    private $entityManager;
+
+    public function __construct(TokenStorageInterface $tokenStorage, EntityManagerInterface $entityManager)
+    {
+        $this->tokenStorage = $tokenStorage;
+        $this->entityManager = $entityManager;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        
+        $user = $this->tokenStorage->getToken()->getUser();
+
         $builder
             ->add('Adresse')
             ->add('Code_postal')
@@ -49,6 +63,12 @@ class LogementType extends AbstractType
             ->add('ProprietaireId', EntityType::class, [
                 'class' => Utilisateur::class,
                 'choice_label' => 'id',
+                'query_builder' => function () use ($user) {
+                    return $this->entityManager->getRepository(Utilisateur::class)->createQueryBuilder('u')
+                        ->where('u.id = :userId')
+                        ->setParameter('userId', $user->getId());
+                },
+                'disabled' => true,
             ])
             
         ;

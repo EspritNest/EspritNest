@@ -21,6 +21,7 @@
   <!-- Vendor CSS Files -->
 
   {% block stylesheets %}
+            {{ encore_entry_link_tags('app') }}
   <link href="{{asset ('vendor/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
   <link href="{{asset ('vendor/bootstrap-icons/bootstrap-icons.css')}}" rel="stylesheet">
   <link href="{{asset ('vendor/boxicons/css/boxicons.min.css')}}" rel="stylesheet">
@@ -92,18 +93,25 @@
         </a>
         <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
-            <a href="annonces/admin14.html.twig">
+            <a href="{{path('app_annonces_index_ad')}}">
               <i class="bi bi-circle"></i><span>Annonces</span>
             </a>
           </li>
           <li>
-            <a href="logement/admin13.html.twig">
+            <a href="{{path('app_logement_index_ad')}}">
               <i class="bi bi-circle"></i><span>Logements</span>
             </a>
           </li>
       
         </ul>
+
       </li><!-- End Components Nav -->
+
+              <li class="nav-item">
+            <a class="nav-link" href="#">
+                <i class="bi bi-box-arrow-right"></i><span>Sign Out</span>
+            </a>
+        </li>
     </ul>
 
   </aside>
@@ -130,6 +138,7 @@
     {% endblock %}
   
    {% block javascripts %}
+            {{ encore_entry_script_tags('app') }}
   <script src="{{asset ('vendor/apexcharts/apexcharts.min.js')}}"></script>
   <script src="{{asset ('vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
   <script src="{{asset ('vendor/chart.js/chart.umd.js')}}"></script>

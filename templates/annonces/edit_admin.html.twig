@@ -1,1 +1,91 @@
 {% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1 class="text-center mb-4 text-primary">Modifier l'Annonce</h1>
+
+    <!-- Card contenant le formulaire -->
+    <div class="card shadow-lg p-5 border-0">
+        {% if userid == annonces_colocation.userId.id or is_granted('ROLE_ADMIN') %}
+            <h4 class="text-center mb-4 text-secondary">Formulaire de modification</h4>
+            <div class="px-4">
+                {{ include('annonces/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
+            </div>
+        {% else %}
+            <div class="alert alert-danger text-center">
+                <i class="bi bi-exclamation-triangle"></i> Vous n'êtes pas autorisé à modifier cette annonce.
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Section des boutons -->
+    <div class="mt-5 d-flex justify-content-between align-items-center">
+        <a href="{{ path('app_annonces_index_ad') }}" class="btn btn-outline-primary btn-lg">
+            <i class="bi bi-arrow-left"></i> Retour à la liste
+        </a>
+
+        {% if userid == annonces_colocation.userId.id or is_granted('ROLE_ADMIN') %}
+            <div>
+                <!-- Bouton de suppression stylé -->
+                {{ include('annonces/_delete_form.html.twig', {
+                    'button_class': 'btn btn-lg btn-danger text-white'
+                }) }}
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Styles personnalisés -->
+<style>
+    .container {
+        max-width: 900px;
+    }
+
+    .card {
+        border-radius: 15px;
+        background: linear-gradient(145deg, #fdfdfd, #ececec);
+        box-shadow: 4px 4px 12px #d0d0d0, -4px -4px 12px #ffffff;
+    }
+
+    .card h4 {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #555;
+    }
+
+    .btn {
+        border-radius: 50px;
+        padding: 12px 25px;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    .btn-outline-primary {
+        color: #007bff;
+        border-color: #007bff;
+        transition: all 0.3s ease;
+    }
+
+    .btn-outline-primary:hover {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        border: none;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-danger:hover {
+        background-color: #c82333;
+    }
+
+    .alert {
+        border-radius: 10px;
+        font-size: 1.2rem;
+        padding: 15px 20px;
+    }
+</style>
+
+{% endblock %}

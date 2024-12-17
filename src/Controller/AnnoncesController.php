@@ -19,6 +19,10 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\UX\Chartjs\Builder\ChartBuilderInterface;
+use Symfony\UX\Chartjs\Model\Chart;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+
 
 #[Route('/annonces')]
 final class AnnoncesController extends AbstractController
@@ -60,7 +64,7 @@ if ($searchQuery || $type) {
             'type' => $type,
         ]);
     }
-    #[Route(name: 'app_annonces_index_ad', methods: ['GET'])]
+    #[Route('/all_admin' , name: 'app_annonces_index_ad', methods: ['GET'])]
     public function index_ad(AnnoncesColocationRepository $annonceRepository, Request $request): Response
     { 
         $searchQuery = $request->query->get('qb');
@@ -72,7 +76,7 @@ $type = $request->query->get('type');
 // Appeler la méthode de recherche si une requête de recherche ou un type est fourni
 if ($searchQuery || $type) {
     if ($type) {
-        $annonces = $annonceRepository->searchByType($type); // Remplacez par la méthode spécifique pour les types d'annonces
+        $annonces = $annonceRepository->search_adByType($type); // Remplacez par la méthode spécifique pour les types d'annonces
     } else {
         $annonces = $annonceRepository->findByTitleOrDescription($searchQuery); // Rechercher dans le titre ou la description
     }
@@ -109,7 +113,7 @@ public function search(Request $request, AnnoncesColocationRepository $annonceRe
         
     ]);
 }
-#[Route( name: 'app_annonces_search_ad', methods: ['GET'])]
+#[Route('/all_admin', name: 'app_annonces_search_ad', methods: ['GET'])]
 public function search_ad(Request $request, AnnoncesColocationRepository $annonceRepository): Response
 {
     $searchQuery = $request->query->get('qb');
@@ -127,7 +131,7 @@ public function search_ad(Request $request, AnnoncesColocationRepository $annonc
 
 
     #[Route('/new', name: 'app_annonces_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager,UtilisateurRepository $userRepository): Response
+    public function new(Request $request, EntityManagerInterface $entityManager,UtilisateurRepository $userRepository, TokenStorageInterface $tokenStorage): Response
     {
         $user= $this->getUser();
 
@@ -138,6 +142,11 @@ public function search_ad(Request $request, AnnoncesColocationRepository $annonc
         } else {
            
             $userid = null;
+        }
+        $user = $tokenStorage->getToken()?->getUser();
+
+        if (!$user) {
+            throw $this->createAccessDeniedException('Vous devez être connecté pour créer une annonce.');
         }
 
         $annoncesColocation = new AnnoncesColocation();
@@ -162,7 +171,7 @@ public function search_ad(Request $request, AnnoncesColocationRepository $annonc
         ]);
     }
 
-    #[Route('/new/admin', name: 'app_annonces_new_ad', methods: ['GET', 'POST'])]
+    #[Route('/new/all_admin', name: 'app_annonces_new_ad', methods: ['GET', 'POST'])]
     public function new_ad(Request $request, EntityManagerInterface $entityManager,UtilisateurRepository $userRepository): Response
     {
         $user= $this->getUser();
@@ -336,7 +345,7 @@ public function search_ad(Request $request, AnnoncesColocationRepository $annonc
         ]);
     }
 
-    #[Route('/{id}/admin', name: 'app_annonces_show_ad', methods: ['GET'])]
+    #[Route('/{id}/show/all_admin', name: 'app_annonces_show_ad', methods: ['GET'])]
     public function show_ad(AnnoncesColocation $annoncesColocation,AnnoncesColocationRepository $ann,ManagerRegistry $doctrine,int $id, Request $request, EntityManagerInterface $entityManager,  CommentRepository $commentRepository, UtilisateurRepository $security): Response
     {
         
@@ -392,6 +401,10 @@ public function search_ad(Request $request, AnnoncesColocationRepository $annonc
            
             $userid = null;
         }
+
+        if (!$user) {
+            throw $this->createAccessDeniedException('Vous devez être connecté pour créer une annonce.');
+        }
         $form = $this->createForm(AnnoncesColocation1Type::class, $annoncesColocation);
         $form->handleRequest($request);
 
@@ -408,7 +421,7 @@ public function search_ad(Request $request, AnnoncesColocationRepository $annonc
         ]);
     }
 
-    #[Route('/{id}/edit/admin', name: 'app_annonces_edit_ad', methods: ['GET', 'POST'])]
+    #[Route('/{id}/edit/all_admin', name: 'app_annonces_edit_ad', methods: ['GET', 'POST'])]
     public function edit_ad(Request $request, AnnoncesColocation $annoncesColocation, EntityManagerInterface $entityManager): Response
     {
         $user= $this->getUser();
@@ -449,7 +462,7 @@ public function search_ad(Request $request, AnnoncesColocationRepository $annonc
         return $this->redirectToRoute('app_annonces_index', [], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('/{id}/admin', name: 'app_annonces_delete_ad', methods: ['POST'])]
+    #[Route('/{id}/delete/all_admin', name: 'app_annonces_delete_ad', methods: ['POST'])]
     public function delete_ad(Request $request, AnnoncesColocation $annoncesColocation, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$annoncesColocation->getId(), $request->getPayload()->getString('_token'))) {
@@ -459,4 +472,74 @@ public function search_ad(Request $request, AnnoncesColocationRepository $annonc
 
         return $this->redirectToRoute('app_annonces_index_ad', [], Response::HTTP_SEE_OTHER);
     }
+
+
+    #[Route('/chart/all_admin', name: 'app_annonces_chart_ad')]
+    public function annoncesChart(EntityManagerInterface $entityManager, ChartBuilderInterface $chartBuilder): Response
+    {
+        $annoncesRepository = $entityManager->getRepository(AnnoncesColocation::class);
+    
+        // Récupérer toutes les annonces
+        $annonces = $annoncesRepository->findAll();
+    
+        $dateCounts = [];
+    
+        // Grouper par mois et année
+        foreach ($annonces as $annonce) {
+            $date = $annonce->getDatePub(); // Supposons que 'getDatePub()' renvoie un objet \DateTime
+            $monthYear = $date->format('Y-m'); // Format "YYYY-MM"
+    
+            if (!isset($dateCounts[$monthYear])) {
+                $dateCounts[$monthYear] = 0;
+            }
+            $dateCounts[$monthYear]++;
+        }
+    
+        // Préparer les données pour le graphique
+        $labels = array_keys($dateCounts); // Les mois/années (e.g., "2024-01", "2024-02")
+        $data = array_values($dateCounts); // Le nombre d'annonces pour chaque mois/année
+    
+        // Debug optionnel
+        dump($labels);
+        dump($data);
+    
+        // Créer le graphique
+        $chart = $chartBuilder
+            ->createChart(Chart::TYPE_LINE) // Graphique linéaire
+            ->setData([
+                'labels' => $labels,
+                'datasets' => [
+                    [
+                        'label' => 'Nombre d\'annonces publiées par mois',
+                        'backgroundColor' => 'rgba(54, 162, 235, 0.2)', // Couleur du fond
+                        'borderColor' => 'rgba(54, 162, 235, 1)', // Couleur de la bordure
+                        'borderWidth' => 1,
+                        'pointBackgroundColor' => 'rgba(75, 192, 192, 1)', // Couleur des points
+                        'data' => $data,
+                    ],
+                ],
+            ])
+            ->setOptions([
+                'scales' => [
+                    'y' => [
+                        'beginAtZero' => true,
+                        'title' => [
+                            'display' => true,
+                            'text' => 'Nombre d\'annonces',
+                        ],
+                    ],
+                    'x' => [
+                        'title' => [
+                            'display' => true,
+                            'text' => 'Mois et année',
+                        ],
+                    ],
+                ],
+            ]);
+    
+        return $this->render('annonces/chart.html.twig', [
+            'chart' => $chart,
+        ]);
+    }
+    
 }

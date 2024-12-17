@@ -22,10 +22,7 @@ class AnnoncesColocation
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank (message:"titre is required")]
-    #[Assert\Regex(
-        pattern: '/^\D+$/',
-        message: "Ce champ ne doit pas contenir de chiffres."
-    )]
+
     private ?string $titre = null;
 
     #[ORM\Column(type: Types::TEXT)]
@@ -51,6 +48,10 @@ class AnnoncesColocation
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     #[Assert\NotBlank (message:"date is required")]
+    #[Assert\LessThanOrEqual(
+        value: "today",
+        message: "La date ne peut pas être ultérieure à aujourd'hui."
+    )]
     private ?\DateTimeInterface $date_pub = null;
 
     #[ORM\ManyToOne(inversedBy: 'Annonces')]
@@ -65,8 +66,13 @@ class AnnoncesColocation
     /**
      * @var Collection<int, Comment>
      */
-    #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'Annonce')]
-    private Collection $comments;
+    #[ORM\OneToMany(
+        targetEntity: Comment::class,
+        mappedBy: 'Annonce',
+        cascade: ['remove'],
+        orphanRemoval: true
+    )]
+        private Collection $comments;
 
     public function __construct()
     {
