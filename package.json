@@ -1,0 +1,21 @@
+{
+  "dependencies": {
+    "chart.js": "^4.4.7"
+  },
+  "name": "espritnest",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "encore dev",
+    "build": "encore production",
+    "watch": "encore dev --watch"
+  },
+  "devDependencies": {
+    "@symfony/webpack-encore": "^1.8.0",
+    "core-js": "^3.0.0",
+    "regenerator-runtime": "^0.13.2",
+    "sass": "^1.26.0",
+    "sass-loader": "^8.0.0",
+    "webpack-notifier": "^1.6.0"
+  }
+}

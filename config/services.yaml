@@ -17,11 +17,13 @@ services:
 
     # Makes classes in src/ available as services
     App\:
-        resource: '../src/'
+        resource: '../src/*'
         exclude:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+        autowire: true
+        autoconfigure: true
 
     # Manually define the PSR-17 factory service for Nyholm
     nyholm.psr7.factory:

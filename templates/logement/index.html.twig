@@ -33,7 +33,7 @@
                             <a href="{{ path('app_logement_show', {'id': logement.id}) }}" class="btn btn-dark btn-sm" style="background-color: #5F0F40;">
                             <strong>Show details</strong>
                             </a>
-                            {% if userid == logement.ProprietaireId.id %}
+                            {% if app.user.id == logement.ProprietaireId.id %}
                                 <a href="{{ path('app_logement_edit', {'id': logement.id}) }}" class="btn btn-primary" style="background-color: #1C1678;">>
                                      Edit 
                                 </a>

@@ -1,1 +1,70 @@
 {% extends 'base.html.twig' %}
+
+{% block title %}Créer une nouvelle Annonce{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-lg">
+                <div class="card-header bg-primary text-white text-center">
+                    <h2>Créer une nouvelle Annonce</h2>
+                </div>
+                <div class="card-body p-4">
+                    {{ include('annonces/_form.html.twig') }}
+                </div>
+                <div class="card-footer text-center bg-light">
+                    <a href="{{ path('app_annonces_index_ad') }}" class="btn btn-outline-primary">
+                        <i class="bi bi-arrow-left"></i> Retour à la liste
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Global container styling */
+    .container {
+        max-width: 900px;
+        padding: 20px;
+    }
+
+    /* Card Design */
+    .card {
+        border-radius: 15px;
+        overflow: hidden;
+    }
+
+    .card-header {
+        border-bottom: 2px solid #e9ecef;
+    }
+
+    .card-footer {
+        border-top: 2px solid #e9ecef;
+    }
+
+    /* Buttons */
+    .btn-outline-primary {
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    .btn-outline-primary i {
+        font-size: 1.2rem;
+        margin-right: 5px;
+    }
+
+    /* Form Fields (if needed for future customization) */
+    form input, form textarea, form select {
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        transition: border-color 0.3s ease-in-out;
+    }
+
+    form input:focus, form textarea:focus, form select:focus {
+        border-color: #007bff;
+        outline: none;
+    }
+</style>
+{% endblock %}

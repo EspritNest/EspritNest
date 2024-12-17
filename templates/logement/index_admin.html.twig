@@ -1,1 +1,85 @@
 {% extends 'base.html.twig' %}
+
+{% block title %}Admin - Logement Index{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Gestion des Logements</h1>
+
+    <div class="table-responsive">
+        <form id="deleteForm" action="{{ path('app_logement_delete_multiple') }}" method="post">
+            <input type="hidden" name="_token" value="{{ csrf_token('delete_multiple') }}">
+            <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th><input type="checkbox" id="select-all"></th>
+                        <th>ID</th>
+                        <th>Adresse</th>
+                        <th>Code Postal</th>
+                        <th>Superficie</th>
+                        <th>Propriétaire</th>
+                        <th>Date d'ajout</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for logement in logements %}
+                        <tr>
+                            <td><input type="checkbox" name="selectedIds[]" value="{{ logement.id }}"></td>
+                            <td>{{ logement.id }}</td>
+                            <td>{{ logement.Adresse }}</td>
+                            <td>{{ logement.CodePostal }}</td>
+                            <td>{{ logement.superficie }} m²</td>
+                            <td>{{ logement.ProprietaireId ? logement.ProprietaireId.nom : 'Non spécifié' }}</td>
+                            <td>{{ logement.dateAjout ? logement.dateAjout|date('Y-m-d') : 'Non spécifiée' }}</td>
+                            <td>
+                                <div class="d-flex">
+                                    <a href="{{ path('app_logement_show_ad', {'id': logement.id}) }}" class="btn btn-sm btn-info me-2">
+                                        <i class="bi bi-eye"></i> Voir
+                                    </a>
+                                    <a href="{{ path('app_logement_edit_ad', {'id': logement.id}) }}" class="btn btn-sm btn-warning me-2">
+                                        <i class="bi bi-pencil"></i> Modifier
+                                    </a>
+                                    <form method="post" action="{{ path('app_logement_delete_ad', {'id': logement.id}) }}" onsubmit="return confirm('Etes-vous sûr de vouloir supprimer ce logement ?');">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ logement.id) }}">
+                                        <button type="submit" class="btn btn-sm btn-danger">
+                                            <i class="bi bi-trash"></i> Supprimer
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="8" class="text-center text-muted">Aucun logement trouvé.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <button type="submit" class="btn btn-success mt-3">Supprimer sélectionnés</button>
+        </form>
+    </div>
+
+    <div class="text-end mt-4">
+        <a href="{{ path('app_logement_new_ad') }}" class="btn btn-success">
+            <i class="bi bi-plus-circle"></i> Ajouter un nouveau logement
+        </a>
+    </div>
+</div>
+
+<script>
+    document.getElementById('select-all').addEventListener('click', function () {
+        const checkboxes = document.querySelectorAll('input[name="selectedIds[]"]');
+        checkboxes.forEach(checkbox => checkbox.checked = this.checked);
+    });
+</script>
+
+<style>
+    .table-responsive {
+        margin-top: 20px;
+    }
+    .btn i {
+        margin-right: 5px;
+    }
+</style>
+{% endblock %}

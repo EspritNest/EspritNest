@@ -23,8 +23,8 @@ class Logement
 
     #[ORM\Column(length: 10, nullable: true)]
     #[Assert\Regex(
-        pattern: '/^\d+$/',
-        message: "Ce champ doit contenir uniquement des chiffres."
+        pattern: '/^\d{4}$/',
+        message: "Ce champ doit contenir exactement 4 chiffres."
     )]
     private ?string $Code_postal = null;
 
@@ -42,6 +42,10 @@ class Logement
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     #[Assert\NotBlank (message:"date is required")]
+    #[Assert\LessThanOrEqual(
+        value: "today",
+        message: "La date ne peut pas être ultérieure à aujourd'hui."
+    )]
     private ?\DateTimeInterface $date_ajout = null;
 
   
@@ -49,7 +53,7 @@ class Logement
     /**
      * @var Collection<int, AnnoncesColocation>
      */
-    #[ORM\OneToMany(targetEntity: AnnoncesColocation::class, mappedBy: 'Logement')]
+    #[ORM\OneToMany(targetEntity: AnnoncesColocation::class, mappedBy: 'Logement', cascade: ['remove'], orphanRemoval: true)]
     private Collection $Annonces;
 
     #[ORM\ManyToOne(inversedBy: 'logements')]

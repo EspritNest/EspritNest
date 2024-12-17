@@ -1,1 +1,113 @@
 {% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-12 d-flex justify-content-between align-items-center mb-4">
+            <h1 class="text-primary">Gestion des Annonces Colocation</h1>
+            <div class="d-flex gap-2">
+                <a href="{{ path('app_annonces_new_ad') }}" class="btn btn-success">
+                    <i class="bi bi-plus-circle"></i> Ajouter une Annonce
+                </a>
+                <a href="{{ path('app_annonces_chart_ad') }}" type="submit" class="btn btn-sm btn-primary" style="width: 100px; background-color: orange;">
+                    Statistique
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search and Sort Section -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <form action="{{ path('app_annonces_search_ad') }}" method="GET">
+                <div class="input-group">
+                    <input type="text" name="qb" class="form-control" placeholder="Rechercher par titre ou description" value="{{ searchQuery }}">
+                    <button type="submit" class="btn btn-primary">Rechercher</button>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-4">
+            <form action="{{ path('app_annonces_index_ad') }}" method="GET">
+                <div class="input-group">
+                    <select name="sort" class="form-select">
+                        <option value="date" {% if sortBy == 'date' %}selected{% endif %}>Trier par Date</option>
+                        <option value="prix" {% if sortBy == 'prix' %}selected{% endif %}>Trier par Prix</option>
+                    </select>
+                    <button type="submit" class="btn btn-secondary">Appliquer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Table of Annonces -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Liste des Annonces</h5>
+        </div>
+        <div class="card-body">
+            {% if annonces_colocations is not empty %}
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>#</th>
+                            <th>Titre</th>
+                            <th>Description</th>
+                            <th>Chambres</th>
+                            <th>Prix (Dt)</th>
+                            <th>Date de Publication</th>
+                            <th>Propriétaire</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for annonces_colocation in annonces_colocations %}
+                            <tr>
+                                <td>{{ loop.index }}</td>
+                                <td>{{ annonces_colocation.titre }}</td>
+                                <td>
+                                    {{ annonces_colocation.description|length > 50 ? annonces_colocation.description|slice(0, 50) ~ '...' : annonces_colocation.description }}
+                                </td>
+                                <td>{{ annonces_colocation.nombreChambres }}</td>
+                                <td>{{ annonces_colocation.prix }}</td>
+                                <td>{{ annonces_colocation.datePub ? annonces_colocation.datePub|date('Y-m-d') : 'N/A' }}</td>
+                                <td>{{ annonces_colocation.userId.nom }}</td>
+                                <td>
+                                    <div class="d-flex gap-2">
+                                        <a href="{{ path('app_annonces_show_ad', {'id': annonces_colocation.id}) }}" class="btn btn-sm btn-info">
+                                            <i class="bi bi-eye"></i> Voir
+                                        </a>
+                                        <a href="{{ path('app_annonces_edit_ad', {'id': annonces_colocation.id}) }}" class="btn btn-sm btn-warning">
+                                            <i class="bi bi-pencil"></i> Modifier
+                                        </a>
+                                        <a href="{{ path('app_logement_show_ad', {'id': annonces_colocation.logement.id}) }}" class="btn btn-sm btn-success">
+                                            <i class="bi bi-house-door"></i> Logement
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p class="text-center">Aucune annonce trouvée</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+    .card-header {
+        font-weight: bold;
+        font-size: 1.2rem;
+    }
+    .table-hover tbody tr:hover {
+        background-color: #f9f9f9;
+    }
+    .btn-sm {
+        padding: 0.4rem 0.75rem;
+    }
+    .d-flex.gap-2 > * {
+        flex: 1;
+    }
+</style>
+{% endblock %}

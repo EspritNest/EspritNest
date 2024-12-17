@@ -21,7 +21,7 @@ class Comment
     private ?\DateTimeInterface $dateC = null;
 
     #[ORM\ManyToOne(targetEntity: AnnoncesColocation::class)]
-    #[ORM\JoinColumn(name: "log_id", referencedColumnName: "id")]
+    #[ORM\JoinColumn(name: "log_id", referencedColumnName: "id", onDelete: "CASCADE")]
     private ?Annoncescolocation $Annonce = null;
 
     #[ORM\ManyToOne(inversedBy: 'comments')]

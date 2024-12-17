@@ -38,7 +38,7 @@ final class LogementController extends AbstractController
             'userid' => $userid,
         ]);
     }
-    #[Route(name: 'app_logement_index_ad', methods: ['GET'])]
+    #[Route('/all_admin',name: 'app_logement_index_ad', methods: ['GET'])]
     public function index_ad(LogementRepository $logementRepository): Response
     {
         $user= $this->getUser();
@@ -122,7 +122,7 @@ final class LogementController extends AbstractController
         ]);
     }
 
-    #[Route('/new/admin', name: 'app_logement_new_ad', methods: ['GET', 'POST'])]
+    #[Route('/new/all_admin', name: 'app_logement_new_ad', methods: ['GET', 'POST'])]
     public function new_ad(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger, UtilisateurRepository $userRepository): Response
     
     {
@@ -206,7 +206,7 @@ final class LogementController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/admin', name: 'app_logement_show_ad', methods: ['GET'])]
+    #[Route('/{id}/show/all_admin', name: 'app_logement_show_ad', methods: ['GET'])]
     public function show_ad(Logement $logement): Response
     {
         $user= $this->getUser();
@@ -254,7 +254,7 @@ final class LogementController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit/admin', name: 'app_logement_edit_ad', methods: ['GET', 'POST'])]
+    #[Route('/{id}/edit/all_admin', name: 'app_logement_edit_ad', methods: ['GET', 'POST'])]
     public function edit_ad(Request $request, Logement $logement, EntityManagerInterface $entityManager): Response
     {
         $user= $this->getUser();
@@ -294,13 +294,40 @@ final class LogementController extends AbstractController
         return $this->redirectToRoute('app_logement_index', [], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('/{id}/admin', name: 'app_logement_delete_ad', methods: ['POST'])]
+    #[Route('/{id}/all_admin', name: 'app_logement_delete_ad', methods: ['POST'])]
     public function delete_ad(Request $request, Logement $logement, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$logement->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($logement);
             $entityManager->flush();
         }
+
+        return $this->redirectToRoute('app_logement_index_ad', [], Response::HTTP_SEE_OTHER);
+    }
+
+
+    #[Route('/delete/multiple/all_admin', name: 'app_logement_delete_multiple', methods: ['POST'])]
+    public function deleteMultiple(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        // Retrieve the selectedIds array safely
+        $selectedIds = $request->request->all('selectedIds');
+
+        if (!is_array($selectedIds)) {
+            // Handle the case where selectedIds is not an array (e.g., no checkboxes selected)
+            return $this->redirectToRoute('app_logement_index_ad', [], Response::HTTP_SEE_OTHER);
+        }
+
+        // Ensure all IDs are valid scalar values
+        $selectedIds = array_filter($selectedIds, 'is_scalar');
+
+        foreach ($selectedIds as $id) {
+            $logement = $entityManager->getRepository(Logement::class)->find($id);
+            if ($logement) {
+                $entityManager->remove($logement);
+            }
+        }
+
+        $entityManager->flush();
 
         return $this->redirectToRoute('app_logement_index_ad', [], Response::HTTP_SEE_OTHER);
     }
