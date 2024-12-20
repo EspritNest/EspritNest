@@ -1,15 +1,18 @@
+/* General layout styles */
 .messenger-container {
-    display: flex; /* Use flexbox for layout */
-    height: 100vh; /* Take up the full viewport height */
+    display: flex;
+    height: 100vh; /* Full viewport height */
+    overflow: hidden; /* Prevent content overflow */
 }
 
+/* Discussions List */
 .discussions-list {
-    width: 25%; /* Fixed width for the discussions list */
+    width: 33.33%; /* 1/3 of the width */
     background-color: #f7f7f7;
     border-right: 1px solid #ddd;
-    overflow-y: auto; /* Scroll if content overflows */
+    overflow-y: auto; /* Enable scrolling for the list */
     padding: 1rem;
-    box-sizing: border-box; /* Include padding in width */
+    box-sizing: border-box;
 }
 
 .discussions-list ul {
@@ -20,31 +23,126 @@
 
 .discussions-list ul li {
     margin-bottom: 1rem;
-}
-
-.discussions-list .new-discussion {
-    display: block;
-    margin-top: 2rem;
-    text-align: center;
-    color: white;
-    background-color: #007BFF;
     padding: 0.5rem;
+    background-color: #fff;
     border-radius: 5px;
-    text-decoration: none;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.2s, box-shadow 0.2s;
+    cursor: pointer;
 }
 
-.discussions-list .new-discussion:hover {
-    background-color: #0056b3;
+/* Hover effect */
+.discussions-list ul li:hover {
+    background-color: #f0f8ff;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
 }
 
+/* Clicked effect */
+.discussions-list ul li:active {
+    background-color: #e6f7ff;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+/* Active/selected item style */
+.discussions-list ul li.active {
+    background-color: #007BFF;
+    color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);
+}
+
+.discussions-list ul li.active .discussion-item {
+    color: #fff;
+}
+
+.discussions-list ul li.active .message-time,
+.discussions-list ul li.active .message-content {
+    color: #e0e0e0;
+}
+
+/* Discussion Item */
+.discussion-item {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.user-img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 1rem;
+    object-fit: cover;
+}
+
+.discussion-info {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.user-status {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.user-name {
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.user-status-indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-left: 0.5rem;
+}
+
+/* Online/offline status colors */
+.user-status-indicator.online {
+    background-color: #28a745; /* Green for online */
+}
+
+.user-status-indicator.offline {
+    background-color: #dc3545; /* Red for offline */
+}
+
+/* Last message */
+.last-message {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0.5rem;
+    color: #666;
+    font-size: 0.85rem;
+}
+
+.message-content {
+    flex-grow: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.message-time {
+    margin-left: 1rem;
+    font-size: 0.75rem;
+    color: #999;
+}
+
+/* Chat Interface */
 .discussion-details {
-    flex: 1; /* Take the remaining space */
+    flex: 1; /* Take up the remaining space (2/3 of the width) */
     padding: 1rem;
-    overflow-y: auto; /* Scroll if content overflows */
+    overflow-y: auto; /* Enable scrolling for the chat interface */
     box-sizing: border-box;
     background-color: #ffffff;
 }
 
+/* Placeholder Text */
 .placeholder-text {
     color: #999;
     text-align: center;

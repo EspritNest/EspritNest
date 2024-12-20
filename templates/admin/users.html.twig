@@ -2,21 +2,136 @@
 
 {% block title %}User Management{% endblock %}
 
+{% block stylesheets %}
+{{ parent() }}
+<link rel="stylesheet" href="{{ asset('css-front/usersAll.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script src="{{ asset('js/usersM.js') }}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const editButtons = document.querySelectorAll('.edit-btn');
+        editButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const userId = this.getAttribute('data-user-id');
+                openEditUserModal(userId);
+            });
+        });
+    });
+
+    function openEditUserModal(userId) {
+        const modal = document.getElementById('editUserModal');
+        modal.style.display = 'flex';
+        fetch(`/admin/user/${userId}`)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('editUserForm_nom').value = data.nom;
+                document.getElementById('editUserForm_email').value = data.email;
+                document.getElementById('editUserForm_roles').value = data.roles.join(', ');
+                document.getElementById('editUserForm_isVerified').checked = data.isVerified;
+            });
+    }
+
+    function closeModal() {
+        const modal = document.getElementById('editUserModal');
+        modal.style.display = 'none';
+    }
+
+    function confirmBlockUser() {
+        // Logic to confirm blocking the user
+    }
+</script>
+{% endblock %}
+
 {% block body %}
 <div class="container">
-    <h1>User Management</h1>
-    <div class="row">
-        {% for user in users %}
-            <div class="col-md-4">
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ user.nom }}</h5>
-                        <p class="card-text">{{ user.email }}</p>
-                        <a href="{{ path('user_edit', {id: user.id}) }}" class="btn btn-primary">Edit</a>
+    <h1 class="page-title">User Management</h1>
+
+    <!-- User Cards Table -->
+    <table class="user-cards-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Created At</th>
+                <th>Verified</th>
+                <th>Roles</th> <!-- New column for roles -->
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr class="user-card-row">
+                <td>
+                    <div class="user-card">
+                        <img src="{{ user.img }}" alt="Profile Image">
+                        <div class="user-info">
+                            <h5>{{ user.nom }}</h5>
+                        </div>
                     </div>
-                </div>
+                </td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.Tel }}</td>
+                <td>{{ user.createdAt|date('Y-m-d H:i') }}</td>
+                <td>{{ user.isVerified ? 'Yes' : 'No' }}</td>
+                <td>{{ user.roles|join(', ') }}</td> <!-- Display roles -->
+                <td>
+                    <div class="action-buttons">
+                        <button class="edit-btn" data-user-id="{{ user.id }}"><i class="fas fa-edit"></i> Edit</button>
+                        <button class="block-btn" data-user-id="{{ user.id }}"><i class="fas fa-ban"></i> Block</button>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Modal for Editing User -->
+    <div id="editUserModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5>Edit User</h5>
+                <span class="close-btn" onclick="closeModal()">&times;</span>
             </div>
-        {% endfor %}
+            <div class="modal-body">
+                {{ form_start(editUserForm) }}
+                
+                <div class="form-group">
+                    {{ form_label(editUserForm.nom) }}
+                    {{ form_widget(editUserForm.nom, {'attr': {'class': 'form-control', 'id': 'editUserForm_nom'}}) }}
+                    {{ form_errors(editUserForm.nom) }}
+                </div>
+
+                <div class="form-group">
+                    {{ form_label(editUserForm.email) }}
+                    {{ form_widget(editUserForm.email, {'attr': {'class': 'form-control', 'id': 'editUserForm_email'}}) }}
+                    {{ form_errors(editUserForm.email) }}
+                </div>
+
+                <div class="form-group">
+                    {{ form_label(editUserForm.roles) }}
+                    {{ form_widget(editUserForm.roles, {'attr': {'class': 'form-control', 'id': 'editUserForm_roles'}}) }}
+                    {{ form_errors(editUserForm.roles) }}
+                </div>
+
+                <div class="form-group">
+                    {{ form_label(editUserForm.isVerified) }}
+                    {{ form_widget(editUserForm.isVerified, {'attr': {'id': 'editUserForm_isVerified'}}) }}
+                    {{ form_errors(editUserForm.isVerified) }}
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="save-btn"><i class="fas fa-save"></i> Save</button>
+                    <button type="button" class="block-btn" onclick="confirmBlockUser()"><i class="fas fa-ban"></i> Block User</button>
+                </div>
+
+                {{ form_end(editUserForm) }}
+            </div>
+        </div>
     </div>
-</div> 
+</div>
 {% endblock %}

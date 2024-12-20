@@ -3,7 +3,7 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" href="{{ asset('css-front/disscusion.css') }}">
+    <link rel="stylesheet" href="{{ asset('css-front/discussion.css') }}">
 {% endblock %}
 {% block body %}
     <div class="messenger-container">
@@ -13,12 +13,26 @@
             <ul>
                 {% for discussion in discussions %}
                     {% set otherParticipant = discussion.getOtherParticipant(app.user) %}
-                    <li>
+                    <li class="{% if discussion.id == activeDiscussionId|default(null) %}active{% endif %}">
                         <a href="{{ path('app_discussions_show', {'id': discussion.id}) }}">
-                            {{ otherParticipant.getName() }}
-                            <br>
-                            {% set lastMessage = discussion.getLastMessage() %}
-                            Last message: {% if lastMessage %}{{ lastMessage.content }}{% else %}No messages yet{% endif %}
+                            <div class="discussion-item">
+                                <img src="{{ otherParticipant.getImg() }}" alt="{{ otherParticipant.getName() }}" class="user-img">
+                                <div class="discussion-info">
+                                    <div class="user-status">
+                                        <span class="user-name">{{ otherParticipant.getName() }}</span>
+                                        <span class="user-status-indicator {% if otherParticipant.isOnline() %}online{% else %}offline{% endif %}"></span>
+                                    </div>
+                                    <div class="last-message">
+                                        {% set lastMessage = discussion.getLastMessage() %}
+                                        <span class="message-content">
+                                            {% if lastMessage %}{{ lastMessage.content }}{% else %}No messages yet{% endif %}
+                                        </span>
+                                        <span class="message-time">
+                                            {% if lastMessage %}{{ lastMessage.sentAt|date('H:i') }}{% endif %}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
                         </a>
                     </li>
                 {% else %}
@@ -28,7 +42,7 @@
             <a href="{{ path('app_discussions_new') }}" class="new-discussion">Create new discussion</a>
         </div>
 
-        <!-- Placeholder for Chat Interface -->
+        <!-- Chat Interface -->
         <div class="discussion-details">
             {% block chat_interface %}
                 <p class="placeholder-text">Select a discussion to view messages</p>
